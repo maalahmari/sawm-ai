@@ -1,0 +1,29 @@
+{
+  "name": "سَوم AI — بيع جوالك بـ 30 ثانية",
+  "short_name": "سوم AI",
+  "description": "حلل جوالك بالذكاء الاصطناعي وانشر إعلانك بـ 30 ثانية",
+  "start_url": "/post-ad-screen.html",
+  "display": "standalone",
+  "orientation": "portrait",
+  "dir": "rtl",
+  "lang": "ar",
+  "background_color": "#f5f0ff",
+  "theme_color": "#7c3aed",
+  "categories": ["shopping", "utilities"],
+  "icons": [
+    {
+      "src": "/icons/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/icons/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ],
+  "screenshots": [],
+  "prefer_related_applications": false
+}

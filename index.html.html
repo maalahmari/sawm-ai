@@ -1,0 +1,2381 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="theme-color" content="#7c3aed">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="سوم AI">
+    <link rel="manifest" href="/manifest.json">
+    <link rel="apple-touch-icon" href="/icons/icon-192.png">
+    <link rel="icon" type="image/png" sizes="192x192" href="/icons/icon-192.png">
+    <title>سَوم AI — إدراج إعلان في 30 ثانية</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700;800;900&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'sawm-purple': {
+                            50: '#f5f0ff',
+                            100: '#ede5ff',
+                            200: '#ddd0ff',
+                            300: '#c4abff',
+                            400: '#a67dff',
+                            500: '#8b5cf6',
+                            600: '#7c3aed',
+                            700: '#6d28d9',
+                            800: '#5b21b6',
+                            900: '#4c1d95',
+                        },
+                        'sawm-emerald': {
+                            50: '#ecfdf5',
+                            100: '#d1fae5',
+                            200: '#a7f3d0',
+                            300: '#6ee7b7',
+                            400: '#34d399',
+                            500: '#10b981',
+                            600: '#059669',
+                            700: '#047857',
+                            800: '#065f46',
+                            900: '#064e3b',
+                        }
+                    },
+                    fontFamily: {
+                        'tajawal': ['Tajawal', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        * { font-family: 'Tajawal', sans-serif; }
+        body { background: #f8f9fa; }
+
+        /* Smooth animations */
+        @keyframes pulseGlow {
+            0%, 100% { box-shadow: 0 0 0 0 rgba(139, 92, 246, 0.4); }
+            50% { box-shadow: 0 0 0 20px rgba(139, 92, 246, 0); }
+        }
+        @keyframes shimmer {
+            0% { background-position: -200% 0; }
+            100% { background-position: 200% 0; }
+        }
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(40px) scale(0.95); }
+            to { opacity: 1; transform: translateY(0) scale(1); }
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        @keyframes scaleIn {
+            from { opacity: 0; transform: scale(0.8); }
+            to { opacity: 1; transform: scale(1); }
+        }
+        @keyframes checkmark {
+            0% { stroke-dashoffset: 50; }
+            100% { stroke-dashoffset: 0; }
+        }
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-6px); }
+        }
+        @keyframes sparkle {
+            0%, 100% { opacity: 0; transform: scale(0) rotate(0deg); }
+            50% { opacity: 1; transform: scale(1) rotate(180deg); }
+        }
+        @keyframes progressFlow {
+            0% { background-position: 0% 50%; }
+            100% { background-position: 200% 50%; }
+        }
+        @keyframes bounceIn {
+            0% { transform: scale(0); opacity: 0; }
+            50% { transform: scale(1.15); }
+            70% { transform: scale(0.95); }
+            100% { transform: scale(1); opacity: 1; }
+        }
+        @keyframes slideUpSheet {
+            from { transform: translateY(100%); }
+            to { transform: translateY(0); }
+        }
+        @keyframes fadeInOverlay {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .animate-slideUp { animation: slideUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
+        .animate-fadeIn { animation: fadeIn 0.4s ease-out forwards; }
+        .animate-scaleIn { animation: scaleIn 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) forwards; }
+        .animate-float { animation: float 3s ease-in-out infinite; }
+        .animate-bounceIn { animation: bounceIn 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) forwards; }
+        .pulse-glow { animation: pulseGlow 2s ease-in-out infinite; }
+
+        .shimmer-bg {
+            background: linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.4) 50%, transparent 100%);
+            background-size: 200% 100%;
+            animation: shimmer 1.5s infinite;
+        }
+
+        .progress-gradient {
+            background: linear-gradient(90deg, #8b5cf6, #a78bfa, #7c3aed, #8b5cf6);
+            background-size: 200% 100%;
+            animation: progressFlow 2s linear infinite;
+        }
+
+        /* Custom scrollbar */
+        ::-webkit-scrollbar { width: 0; }
+
+        /* Status bar notch simulation */
+        .notch {
+            width: 120px;
+            height: 28px;
+            background: #000;
+            border-radius: 0 0 18px 18px;
+            margin: 0 auto;
+        }
+
+        /* Glass effect */
+        .glass {
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+        }
+
+        .card-shadow {
+            box-shadow: 0 4px 24px -4px rgba(139, 92, 246, 0.12), 0 0 0 1px rgba(139, 92, 246, 0.05);
+        }
+
+        .btn-shadow {
+            box-shadow: 0 8px 32px -8px rgba(139, 92, 246, 0.5);
+        }
+
+        .sheet-overlay {
+            animation: fadeInOverlay 0.3s ease-out forwards;
+        }
+        .sheet-content {
+            animation: slideUpSheet 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        }
+
+        /* Custom range slider */
+        input[type="range"] {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 100%;
+            height: 6px;
+            border-radius: 999px;
+            background: linear-gradient(to left, #8b5cf6, #ddd0ff);
+            outline: none;
+            direction: ltr;
+        }
+        input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            background: white;
+            border: 3px solid #8b5cf6;
+            box-shadow: 0 2px 8px rgba(139, 92, 246, 0.3);
+            cursor: pointer;
+            transition: transform 0.15s ease;
+        }
+        input[type="range"]::-webkit-slider-thumb:active {
+            transform: scale(1.2);
+        }
+
+        /* Prevent text selection on buttons */
+        button, .no-select { user-select: none; -webkit-user-select: none; }
+    </style>
+</head>
+<body class="flex items-center justify-center min-h-screen p-4 bg-gradient-to-br from-gray-50 via-white to-sawm-purple-50/30">
+
+    <div id="root"></div>
+
+    <script type="text/babel">
+        const { useState, useEffect, useCallback, useRef } = React;
+
+        /* ───────────── ICONS (inline SVG) ───────────── */
+        const CameraIcon = ({ size = 48, color = "white" }) => (
+            <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/>
+                <circle cx="12" cy="13" r="4"/>
+            </svg>
+        );
+
+        const SparkleIcon = ({ size = 20, color = "#8b5cf6" }) => (
+            <svg width={size} height={size} viewBox="0 0 24 24" fill={color}>
+                <path d="M12 0L14.59 8.41L23 11L14.59 13.59L12 22L9.41 13.59L1 11L9.41 8.41L12 0Z"/>
+            </svg>
+        );
+
+        const CheckIcon = ({ size = 24, color = "white" }) => (
+            <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                <polyline points="20 6 9 17 4 12" style={{ strokeDasharray: 50, strokeDashoffset: 0, animation: 'checkmark 0.4s ease-out forwards' }}/>
+            </svg>
+        );
+
+        const AIChipIcon = ({ size = 20 }) => (
+            <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="#8b5cf6" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+                <rect x="4" y="4" width="16" height="16" rx="2"/>
+                <rect x="9" y="9" width="6" height="6" rx="1"/>
+                <line x1="9" y1="1" x2="9" y2="4"/><line x1="15" y1="1" x2="15" y2="4"/>
+                <line x1="9" y1="20" x2="9" y2="23"/><line x1="15" y1="20" x2="15" y2="23"/>
+                <line x1="20" y1="9" x2="23" y2="9"/><line x1="20" y1="14" x2="23" y2="14"/>
+                <line x1="1" y1="9" x2="4" y2="9"/><line x1="1" y1="14" x2="4" y2="14"/>
+            </svg>
+        );
+
+        const ShieldIcon = ({ size = 16 }) => (
+            <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="#10b981" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+                <polyline points="9 12 11 14 15 10"/>
+            </svg>
+        );
+
+        const ImageIcon = ({ size = 32, color = "#a78bfa" }) => (
+            <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+                <rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><circle cx="8.5" cy="8.5" r="1.5"/>
+                <polyline points="21 15 16 10 5 21"/>
+            </svg>
+        );
+
+        const TagIcon = ({ size = 16, color = "#8b5cf6" }) => (
+            <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"/>
+                <line x1="7" y1="7" x2="7.01" y2="7"/>
+            </svg>
+        );
+
+        const RocketIcon = ({ size = 20 }) => (
+            <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M4.5 16.5c-1.5 1.26-2 5-2 5s3.74-.5 5-2c.71-.84.7-2.13-.09-2.91a2.18 2.18 0 0 0-2.91-.09z"/>
+                <path d="M12 15l-3-3a22 22 0 0 1 2-3.95A12.88 12.88 0 0 1 22 2c0 2.72-.78 7.5-6 11a22.35 22.35 0 0 1-4 2z"/>
+                <path d="M9 12H4s.55-3.03 2-4c1.62-1.08 5 0 5 0"/>
+                <path d="M12 15v5s3.03-.55 4-2c1.08-1.62 0-5 0-5"/>
+            </svg>
+        );
+
+        const EditIcon = ({ size = 16, color = "#8b5cf6" }) => (
+            <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
+                <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
+            </svg>
+        );
+
+        const CloseIcon = ({ size = 20, color = "#6b7280" }) => (
+            <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
+            </svg>
+        );
+
+        const MinusIcon = ({ size = 18, color = "#8b5cf6" }) => (
+            <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth="2.5" strokeLinecap="round"><line x1="5" y1="12" x2="19" y2="12"/></svg>
+        );
+
+        const PlusIcon = ({ size = 18, color = "#8b5cf6" }) => (
+            <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth="2.5" strokeLinecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+        );
+
+        /* ───────────── EDIT BOTTOM SHEET ───────────── */
+        const EditSheet = ({ mode, product, onSave, onClose }) => {
+            // mode: 'price' or 'condition'
+            const [price, setPrice] = useState(product.price);
+            const [condition, setCondition] = useState(product.conditionKey);
+
+            const conditions = [
+                { key: 'new', label: 'جديد بالكرتون', icon: '🆕', score: 100, desc: 'ما انفتح أبداً' },
+                { key: 'excellent', label: 'ممتازة — مثل الجديد', icon: '✨', score: 95, desc: 'استخدام خفيف بدون أي أثر' },
+                { key: 'good', label: 'جيدة جداً', icon: '👍', score: 80, desc: 'خدوش بسيطة ما تنلاحظ' },
+                { key: 'fair', label: 'مقبولة', icon: '📦', score: 60, desc: 'آثار استخدام واضحة' },
+            ];
+
+            const formatPrice = (p) => {
+                return new Intl.NumberFormat('ar-SA').format(p);
+            };
+
+            const low = product.priceLow || 3500;
+            const high = product.priceHigh || 4200;
+            const sliderMin = Math.max(100, Math.round(low * 0.5));
+            const sliderMax = Math.round(high * 1.5);
+            const getPriceHint = (p) => {
+                if (p < low) return { text: 'أقل من السوق — بينباع بسرعة! 🔥', color: 'text-sawm-emerald-600' };
+                if (p <= high) return { text: 'ضمن نطاق السوق — سعر عادل 👌', color: 'text-sawm-purple-600' };
+                return { text: 'أعلى من السوق — ممكن ياخذ وقت ⏳', color: 'text-amber-600' };
+            };
+
+            const hint = getPriceHint(price);
+
+            return (
+                <div className="absolute inset-0 z-50 flex flex-col justify-end sheet-overlay" style={{ background: 'rgba(0,0,0,0.4)' }} onClick={onClose}>
+                    <div className="bg-white rounded-t-3xl sheet-content" onClick={e => e.stopPropagation()}>
+                        {/* Handle */}
+                        <div className="flex justify-center pt-3 pb-1">
+                            <div className="w-10 h-1 bg-gray-200 rounded-full"></div>
+                        </div>
+
+                        {/* Header */}
+                        <div className="flex items-center justify-between px-6 py-3">
+                            <h3 className="text-lg font-bold text-gray-900">
+                                {mode === 'price' ? 'عدّل السعر' : 'عدّل الحالة'}
+                            </h3>
+                            <button onClick={onClose} className="w-8 h-8 rounded-full bg-gray-100 flex items-center justify-center hover:bg-gray-200 transition-colors">
+                                <CloseIcon size={16} />
+                            </button>
+                        </div>
+
+                        {mode === 'price' ? (
+                            <div className="px-6 pb-8">
+                                {/* Current price display */}
+                                <div className="text-center mb-6">
+                                    <div className="inline-flex items-center gap-2 bg-sawm-purple-50 rounded-2xl px-6 py-4">
+                                        <span className="text-3xl font-bold text-sawm-purple-700">{formatPrice(price)}</span>
+                                        <span className="text-sm text-sawm-purple-400 font-medium">ر.س</span>
+                                    </div>
+                                </div>
+
+                                {/* +/- buttons with slider */}
+                                <div className="flex items-center gap-3 mb-4">
+                                    <button
+                                        onClick={() => setPrice(Math.max(sliderMin, price - 50))}
+                                        className="w-10 h-10 rounded-xl bg-sawm-purple-50 flex items-center justify-center hover:bg-sawm-purple-100 active:scale-95 transition-all"
+                                    >
+                                        <MinusIcon />
+                                    </button>
+                                    <input
+                                        type="range"
+                                        min={sliderMin}
+                                        max={sliderMax}
+                                        step="50"
+                                        value={price}
+                                        onChange={e => setPrice(Number(e.target.value))}
+                                        className="flex-1"
+                                    />
+                                    <button
+                                        onClick={() => setPrice(Math.min(sliderMax, price + 50))}
+                                        className="w-10 h-10 rounded-xl bg-sawm-purple-50 flex items-center justify-center hover:bg-sawm-purple-100 active:scale-95 transition-all"
+                                    >
+                                        <PlusIcon />
+                                    </button>
+                                </div>
+
+                                {/* Market range labels */}
+                                <div className="flex justify-between text-[10px] text-gray-400 mb-4 px-12">
+                                    <span>{formatPrice(sliderMin)} ر.س</span>
+                                    <span>{formatPrice(sliderMax)} ر.س</span>
+                                </div>
+
+                                {/* Smart hint */}
+                                <div className="bg-gray-50 rounded-2xl p-3 mb-6">
+                                    <div className="flex items-center gap-2">
+                                        <AIChipIcon size={16} />
+                                        <span className={`text-xs font-medium ${hint.color}`}>{hint.text}</span>
+                                    </div>
+                                    <div className="flex items-center justify-between mt-2 text-[10px] text-gray-400">
+                                        <span>نطاق السوق: {new Intl.NumberFormat('ar-SA').format(low)} - {new Intl.NumberFormat('ar-SA').format(high)} ر.س</span>
+                                        <span>اقتراح سَوم: {new Intl.NumberFormat('ar-SA').format(product.price)} ر.س</span>
+                                    </div>
+                                </div>
+
+                                {/* Save button */}
+                                <button
+                                    onClick={() => onSave({ price })}
+                                    className="w-full py-3.5 rounded-2xl bg-gradient-to-l from-sawm-purple-600 to-sawm-purple-500 text-white font-bold text-sm btn-shadow hover:brightness-110 active:scale-[0.98] transition-all"
+                                >
+                                    تأكيد السعر
+                                </button>
+                            </div>
+                        ) : (
+                            <div className="px-6 pb-8">
+                                {/* Condition options */}
+                                <div className="space-y-2 mb-6">
+                                    {conditions.map(c => (
+                                        <button
+                                            key={c.key}
+                                            onClick={() => setCondition(c.key)}
+                                            className={`
+                                                w-full flex items-center gap-3 p-3.5 rounded-2xl text-right transition-all duration-200
+                                                ${condition === c.key
+                                                    ? 'bg-sawm-purple-50 border-2 border-sawm-purple-400 scale-[1.01]'
+                                                    : 'bg-gray-50 border-2 border-transparent hover:bg-gray-100'
+                                                }
+                                            `}
+                                        >
+                                            <div className={`w-10 h-10 rounded-xl flex items-center justify-center text-lg flex-shrink-0 ${
+                                                condition === c.key ? 'bg-sawm-purple-100' : 'bg-white'
+                                            }`}>
+                                                {c.icon}
+                                            </div>
+                                            <div className="flex-1">
+                                                <div className="flex items-center justify-between">
+                                                    <span className={`text-sm font-bold ${condition === c.key ? 'text-sawm-purple-700' : 'text-gray-700'}`}>{c.label}</span>
+                                                    <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full ${
+                                                        condition === c.key ? 'bg-sawm-purple-200 text-sawm-purple-700' : 'bg-gray-200 text-gray-500'
+                                                    }`}>{c.score}%</span>
+                                                </div>
+                                                <span className="text-[11px] text-gray-400">{c.desc}</span>
+                                            </div>
+                                            {condition === c.key && (
+                                                <div className="w-5 h-5 rounded-full bg-sawm-purple-500 flex items-center justify-center flex-shrink-0">
+                                                    <CheckIcon size={12} />
+                                                </div>
+                                            )}
+                                        </button>
+                                    ))}
+                                </div>
+
+                                {/* Save button */}
+                                <button
+                                    onClick={() => {
+                                        const sel = conditions.find(c => c.key === condition);
+                                        onSave({ conditionKey: condition, conditionLabel: sel.label, conditionScore: sel.score });
+                                    }}
+                                    className="w-full py-3.5 rounded-2xl bg-gradient-to-l from-sawm-purple-600 to-sawm-purple-500 text-white font-bold text-sm btn-shadow hover:brightness-110 active:scale-[0.98] transition-all"
+                                >
+                                    تأكيد الحالة
+                                </button>
+                            </div>
+                        )}
+                    </div>
+                </div>
+            );
+        };
+
+        /* ───────────── Floating Sparkles Decoration ───────────── */
+        const FloatingSparkles = () => (
+            <div className="absolute inset-0 pointer-events-none overflow-hidden">
+                {[...Array(5)].map((_, i) => (
+                    <div key={i} className="absolute" style={{
+                        top: `${15 + i * 18}%`,
+                        left: i % 2 === 0 ? `${5 + i * 3}%` : `${80 - i * 3}%`,
+                        animation: `sparkle ${2 + i * 0.5}s ease-in-out ${i * 0.4}s infinite`,
+                        opacity: 0,
+                    }}>
+                        <SparkleIcon size={8 + i * 2} color={i % 2 === 0 ? '#c4abff' : '#a7f3d0'} />
+                    </div>
+                ))}
+            </div>
+        );
+
+        const GalleryIcon = ({ size = 24, color = "white" }) => (
+            <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+                <rect x="3" y="3" width="18" height="18" rx="2" ry="2"/>
+                <circle cx="8.5" cy="8.5" r="1.5"/>
+                <polyline points="21 15 16 10 5 21"/>
+            </svg>
+        );
+
+        /* ───────────── SOURCE PICKER ACTION SHEET ───────────── */
+        const SourcePicker = ({ onSelect, onClose }) => (
+            <div className="absolute inset-0 z-50 flex flex-col justify-end sheet-overlay" style={{ background: 'rgba(0,0,0,0.4)' }} onClick={onClose}>
+                <div className="bg-white rounded-t-3xl sheet-content px-6 pb-8" onClick={e => e.stopPropagation()}>
+                    <div className="flex justify-center pt-3 pb-1 mb-2">
+                        <div className="w-10 h-1 bg-gray-200 rounded-full"></div>
+                    </div>
+                    <h3 className="text-lg font-bold text-gray-900 text-center mb-1">وش تبي تسوّي؟</h3>
+                    <p className="text-xs text-gray-400 text-center mb-5">اختر طريقة رفع صورة المنتج</p>
+                    <div className="grid grid-cols-2 gap-3">
+                        <button onClick={() => onSelect('camera')} className="flex flex-col items-center gap-3 p-5 rounded-2xl bg-gradient-to-br from-sawm-purple-500 to-sawm-purple-700 text-white active:scale-95 transition-all btn-shadow">
+                            <div className="w-14 h-14 rounded-2xl bg-white/20 flex items-center justify-center">
+                                <CameraIcon size={30} color="white" />
+                            </div>
+                            <span className="font-bold text-sm">فتح الكاميرا</span>
+                            <span className="text-[10px] text-white/70">صوّر المنتج مباشرة</span>
+                        </button>
+                        <button onClick={() => onSelect('gallery')} className="flex flex-col items-center gap-3 p-5 rounded-2xl bg-gradient-to-br from-sawm-emerald-500 to-sawm-emerald-700 text-white active:scale-95 transition-all" style={{ boxShadow: '0 8px 32px -8px rgba(16, 185, 129, 0.5)' }}>
+                            <div className="w-14 h-14 rounded-2xl bg-white/20 flex items-center justify-center">
+                                <GalleryIcon size={30} color="white" />
+                            </div>
+                            <span className="font-bold text-sm">الاستوديو</span>
+                            <span className="text-[10px] text-white/70">اختر من الصور</span>
+                        </button>
+                    </div>
+                    <button onClick={onClose} className="w-full mt-3 py-3 rounded-2xl bg-gray-100 text-gray-500 font-medium text-sm hover:bg-gray-200 active:scale-[0.98] transition-all">
+                        إلغاء
+                    </button>
+                </div>
+            </div>
+        );
+
+        /* ───────────── STEP 1: Camera / Capture ───────────── */
+        const PHOTO_LABELS = ['الأمامية', 'الخلفية', 'الجوانب'];
+
+        const CaptureStep = ({ onCapture, initialPhotos, photoValidation }) => {
+            // photoValidation: { statuses: ['valid','valid','error'], failedIndex: 1, errorMessage: '...', errorType: '...' } | null
+            const [photos, setPhotos] = useState(initialPhotos || [null, null, null]);
+            const [isPressed, setIsPressed] = useState(false);
+            const [showPicker, setShowPicker] = useState(false);
+            const [reshootIndex, setReshootIndex] = useState(null); // which photo slot to reshoot
+            const cameraRef = useRef(null);
+            const galleryRef = useRef(null);
+
+            // Sync with initialPhotos when they change (e.g. returning from validation)
+            useEffect(() => {
+                if (initialPhotos && initialPhotos.some(Boolean)) {
+                    setPhotos(initialPhotos);
+                }
+            }, [initialPhotos]);
+
+            const filledCount = photos.filter(Boolean).length;
+            const allFilled = filledCount === 3;
+            const hasValidation = photoValidation && photoValidation.statuses;
+            const isPartialReshoot = hasValidation && photoValidation.statuses.includes('error');
+            const nextSlot = isPartialReshoot
+                ? photoValidation.statuses.indexOf('error')
+                : photos.findIndex(p => p === null); // next empty slot
+
+            const handleSourceSelect = (source) => {
+                setShowPicker(false);
+                if (source === 'camera') {
+                    cameraRef.current.click();
+                } else {
+                    galleryRef.current.click();
+                }
+            };
+
+            const handleFileChange = (e) => {
+                const file = e.target.files[0];
+                if (!file) return;
+                const reader = new FileReader();
+                reader.onload = (ev) => {
+                    const base64 = ev.target.result;
+                    setPhotos(prev => {
+                        const updated = [...prev];
+                        if (reshootIndex !== null) {
+                            // Replacing a specific failed photo
+                            updated[reshootIndex] = base64;
+                        } else {
+                            const idx = prev.findIndex(p => p === null);
+                            if (idx !== -1) updated[idx] = base64;
+                        }
+                        return updated;
+                    });
+                    setReshootIndex(null);
+                };
+                reader.readAsDataURL(file);
+                e.target.value = '';
+            };
+
+            // Handle reshoot of a specific photo
+            const handleReshootPhoto = (index) => {
+                setReshootIndex(index);
+                setShowPicker(true);
+            };
+
+            // Auto-submit when 3 photos are done (and either no validation or after reshoot)
+            useEffect(() => {
+                if (photos.every(Boolean)) {
+                    // If we're in partial reshoot mode and a failed photo was just replaced
+                    if (isPartialReshoot) {
+                        const failedIdx = photoValidation.statuses.indexOf('error');
+                        // Check if the failed slot now has a different photo (was replaced)
+                        if (initialPhotos && photos[failedIdx] !== initialPhotos[failedIdx]) {
+                            const timer = setTimeout(() => onCapture(photos), 600);
+                            return () => clearTimeout(timer);
+                        }
+                        return; // Don't auto-submit if failed photo hasn't been replaced yet
+                    }
+                    const timer = setTimeout(() => onCapture(photos), 600);
+                    return () => clearTimeout(timer);
+                }
+            }, [photos]);
+
+            const headingTexts = [
+                'وش بتبيع اليوم؟ 📸',
+                'حلو! الحين صوّر الخلف 🔄',
+                'آخر وحدة! صوّر الجنب 📐',
+            ];
+            const subTexts = [
+                'صوّر الشاشة الأمامية',
+                'خلنا نشوف الظهر والكاميرا',
+                'الأطراف والمنافذ — وخلصنا!',
+            ];
+
+            // Partial reshoot heading
+            const reshootHeading = isPartialReshoot ? 'صوّر الصورة المطلوبة مرة ثانية 🔄' : null;
+            const reshootSub = isPartialReshoot ? photoValidation.errorMessage : null;
+
+            return (
+                <div className="flex flex-col items-center justify-center flex-1 px-6 animate-fadeIn relative">
+                    {/* Hidden file inputs */}
+                    <input type="file" accept="image/*" capture="environment" ref={cameraRef} onChange={handleFileChange} style={{ display: 'none' }} />
+                    <input type="file" accept="image/*" ref={galleryRef} onChange={handleFileChange} style={{ display: 'none' }} />
+
+                    {/* Header */}
+                    <div className="text-center mb-6 animate-slideUp">
+                        <div className="inline-flex items-center gap-2 bg-sawm-purple-50 rounded-full px-4 py-1.5 mb-4">
+                            <AIChipIcon size={16} />
+                            <span className="text-sawm-purple-600 text-xs font-medium">مدعوم بالذكاء الاصطناعي</span>
+                        </div>
+                        <h2 className="text-2xl font-bold text-gray-900 mb-2" key={filledCount}>
+                            {allFilled && !isPartialReshoot ? 'تمام! جاري التحليل... ✨' : reshootHeading || headingTexts[nextSlot >= 0 ? nextSlot : 0]}
+                        </h2>
+                        <p className={`text-sm leading-relaxed ${isPartialReshoot ? 'text-red-500' : 'text-gray-400'}`}>
+                            {allFilled && !isPartialReshoot ? 'سَوم يشتغل الحين' : reshootSub || subTexts[nextSlot >= 0 ? nextSlot : 0]}
+                        </p>
+                    </div>
+
+                    {/* Camera button */}
+                    <div className="relative mb-6">
+                        <div className="absolute inset-0 -m-4 rounded-full border-2 border-dashed border-sawm-purple-200/50 animate-spin" style={{ animationDuration: '20s' }}></div>
+                        <div className="absolute inset-0 -m-8 rounded-full border border-dashed border-sawm-purple-100/40 animate-spin" style={{ animationDuration: '30s', animationDirection: 'reverse' }}></div>
+
+                        <button
+                            onClick={() => {
+                                if (isPartialReshoot) {
+                                    const failedIdx = photoValidation.statuses.indexOf('error');
+                                    handleReshootPhoto(failedIdx);
+                                } else if (!allFilled) {
+                                    setShowPicker(true);
+                                }
+                            }}
+                            onMouseDown={() => setIsPressed(true)}
+                            onMouseUp={() => setIsPressed(false)}
+                            onMouseLeave={() => setIsPressed(false)}
+                            disabled={allFilled && !isPartialReshoot}
+                            className={`
+                                relative w-36 h-36 rounded-full
+                                ${isPartialReshoot
+                                    ? 'bg-gradient-to-br from-red-400 via-red-500 to-red-600'
+                                    : 'bg-gradient-to-br from-sawm-purple-500 via-sawm-purple-600 to-sawm-purple-700'}
+                                flex items-center justify-center
+                                transition-all duration-200 ease-out
+                                ${allFilled && !isPartialReshoot ? '' : 'pulse-glow cursor-pointer'}
+                                ${isPressed ? 'scale-90' : allFilled && !isPartialReshoot ? 'scale-100' : 'hover:scale-105'}
+                            `}
+                        >
+                            {allFilled && !isPartialReshoot ? (
+                                <div className="absolute inset-1 rounded-full bg-sawm-emerald-500 flex items-center justify-center">
+                                    <CheckIcon size={48} color="white" />
+                                </div>
+                            ) : isPartialReshoot ? (
+                                <div className="absolute inset-1 rounded-full bg-gradient-to-br from-red-300 to-red-500 flex items-center justify-center">
+                                    <CameraIcon size={44} />
+                                </div>
+                            ) : (
+                                <div className="absolute inset-1 rounded-full bg-gradient-to-br from-sawm-purple-400 to-sawm-purple-600 flex items-center justify-center">
+                                    <CameraIcon size={44} />
+                                </div>
+                            )}
+                        </button>
+                    </div>
+
+                    {/* Label */}
+                    <p className={`font-semibold text-base mb-1 ${
+                        isPartialReshoot ? 'text-red-500 animate-float' :
+                        allFilled ? 'text-sawm-emerald-600' : 'text-sawm-purple-600 animate-float'
+                    }`}>
+                        {isPartialReshoot ? 'إعادة تصوير' : allFilled ? 'اكتملت الصور!' : 'تصوير المنتج'}
+                    </p>
+                    <p className="text-gray-400 text-xs mb-5">
+                        {isPartialReshoot ? `الصورة ${nextSlot + 1} تحتاج إعادة تصوير` : allFilled ? '' : `الصورة ${nextSlot + 1} من ٣`}
+                    </p>
+
+                    {/* 3 Thumbnail slots with per-photo validation status */}
+                    <div className="flex items-center gap-3 mb-4">
+                        {[0, 1, 2].map(i => {
+                            const status = hasValidation ? photoValidation.statuses[i] : null;
+                            const isError = status === 'error';
+                            const isValid = status === 'valid';
+                            return (
+                                <div key={i} className="flex flex-col items-center gap-1 relative">
+                                    {/* Error message above failed photo */}
+                                    {isError && (
+                                        <div className="absolute -top-10 left-1/2 -translate-x-1/2 whitespace-nowrap bg-red-500 text-white text-[8px] px-2 py-1 rounded-lg shadow-lg z-10 animate-bounceIn">
+                                            تحتاج إعادة تصوير
+                                            <div className="absolute bottom-0 left-1/2 -translate-x-1/2 translate-y-1/2 w-2 h-2 bg-red-500 rotate-45"></div>
+                                        </div>
+                                    )}
+                                    <div
+                                        className={`
+                                            w-16 h-16 rounded-xl overflow-hidden transition-all duration-300 relative
+                                            ${isError
+                                                ? 'ring-2 ring-red-400 border-2 border-red-400'
+                                                : isValid
+                                                    ? 'ring-2 ring-sawm-emerald-400'
+                                                    : photos[i]
+                                                        ? 'ring-2 ring-sawm-emerald-400'
+                                                        : i === nextSlot
+                                                            ? 'border-2 border-dashed border-sawm-purple-400 bg-sawm-purple-50'
+                                                            : 'border-2 border-dashed border-gray-200 bg-gray-50'
+                                            }
+                                        `}
+                                        onClick={() => isError && handleReshootPhoto(i)}
+                                        style={isError ? { cursor: 'pointer' } : {}}
+                                    >
+                                        {photos[i] ? (
+                                            <>
+                                                <img src={photos[i]} alt={PHOTO_LABELS[i]} className={`w-full h-full object-cover ${isError ? 'opacity-50' : ''}`} />
+                                                {/* Validation overlay */}
+                                                {isValid && (
+                                                    <div className="absolute bottom-0.5 right-0.5 w-5 h-5 rounded-full bg-sawm-emerald-500 flex items-center justify-center shadow-sm">
+                                                        <CheckIcon size={12} color="white" />
+                                                    </div>
+                                                )}
+                                                {isError && (
+                                                    <div className="absolute inset-0 bg-red-500/20 flex flex-col items-center justify-center gap-0.5">
+                                                        <CloseIcon size={18} color="#ef4444" />
+                                                        <span className="text-[7px] font-bold text-red-600 bg-white/80 px-1 rounded">إعادة</span>
+                                                    </div>
+                                                )}
+                                            </>
+                                        ) : (
+                                            <div className="w-full h-full flex items-center justify-center">
+                                                <span className={`text-lg ${i === nextSlot ? '' : 'opacity-30'}`}>
+                                                    {['📱', '🔄', '📐'][i]}
+                                                </span>
+                                            </div>
+                                        )}
+                                    </div>
+                                    <span className={`text-[9px] font-medium ${
+                                        isError ? 'text-red-500' :
+                                        isValid ? 'text-sawm-emerald-600' :
+                                        photos[i] ? 'text-sawm-emerald-600' :
+                                        i === nextSlot ? 'text-sawm-purple-600' : 'text-gray-300'
+                                    }`}>
+                                        {PHOTO_LABELS[i]}
+                                    </span>
+
+                                    {/* Reshoot button for failed photo */}
+                                    {isError && (
+                                        <button
+                                            onClick={() => handleReshootPhoto(i)}
+                                            className="mt-0.5 px-2 py-0.5 bg-red-50 border border-red-200 rounded-lg text-[8px] font-bold text-red-600 hover:bg-red-100 transition-colors flex items-center gap-0.5"
+                                        >
+                                            <CameraIcon size={8} color="#dc2626" />
+                                            إعادة تصوير
+                                        </button>
+                                    )}
+                                </div>
+                            );
+                        })}
+                    </div>
+
+                    {/* Progress bar */}
+                    <div className="w-full max-w-xs flex items-center gap-2 mb-4">
+                        <div className="flex-1 h-1.5 bg-gray-100 rounded-full overflow-hidden">
+                            <div className={`h-full rounded-full transition-all duration-500 ${
+                                isPartialReshoot ? 'bg-red-400' :
+                                allFilled ? 'bg-sawm-emerald-500' : 'bg-sawm-purple-400'
+                            }`}
+                                 style={{ width: isPartialReshoot ? '66%' : `${(filledCount / 3) * 100}%` }}></div>
+                        </div>
+                        <span className={`text-[10px] font-bold ${
+                            isPartialReshoot ? 'text-red-500' :
+                            allFilled ? 'text-sawm-emerald-600' : 'text-gray-400'
+                        }`}>{isPartialReshoot ? '٢/٣' : `${filledCount}/٣`}</span>
+                    </div>
+
+                    {/* Tip */}
+                    <div className="w-full max-w-xs">
+                        <div className={`flex items-center gap-3 rounded-2xl p-3 card-shadow ${isPartialReshoot ? 'bg-red-50' : 'bg-white'}`}>
+                            <div className={`w-9 h-9 rounded-xl flex items-center justify-center flex-shrink-0 ${isPartialReshoot ? 'bg-red-100' : 'bg-sawm-purple-50'}`}>
+                                <span className="text-lg">{isPartialReshoot ? '📸' : '💡'}</span>
+                            </div>
+                            <p className={`text-xs leading-relaxed ${isPartialReshoot ? 'text-red-600' : 'text-gray-500'}`}>
+                                {isPartialReshoot
+                                    ? 'اضغط على الصورة المحددة بالأحمر أو زر الكاميرا لإعادة تصويرها. الصور السليمة محفوظة!'
+                                    : 'خلّ الإضاءة واضحة والخلفية نظيفة عشان الـ AI يحلّل أفضل'
+                                }
+                            </p>
+                        </div>
+                    </div>
+
+                    {/* Source Picker */}
+                    {showPicker && <SourcePicker onSelect={handleSourceSelect} onClose={() => setShowPicker(false)} />}
+                </div>
+            );
+        };
+
+        /* ───────────── STEP 2: AI Analysis ───────────── */
+        const AnalysisStep = ({ progress, currentTask, imagePreview, allPhotos = [], isValidating = false }) => {
+            const tasks = isValidating ? [
+                { label: 'فحص ترتيب الزوايا...', icon: '📱' },
+                { label: 'التحقق من الوضوح والإضاءة...', icon: '💡' },
+                { label: 'مطابقة الأجهزة...', icon: '🔄' },
+                { label: 'فحص اكتمال جسم الجهاز...', icon: '📏' },
+            ] : [
+                { label: 'تحليل الصورة...', icon: '🔍' },
+                { label: 'التعرّف على المنتج...', icon: '🤖' },
+                { label: 'تقييم الحالة...', icon: '📊' },
+                { label: 'حساب السعر العادل...', icon: '💰' },
+            ];
+
+            return (
+                <div className="flex flex-col items-center justify-center flex-1 px-6 animate-fadeIn">
+                    {/* 3 Photo thumbnails being analyzed */}
+                    <div className="flex items-center gap-3 mb-8">
+                        {allPhotos.length > 0 ? allPhotos.map((photo, i) => (
+                            <div key={i} className={`relative w-20 h-20 rounded-2xl overflow-hidden transition-all duration-500 ${currentTask > i ? 'ring-2 ring-sawm-emerald-400' : currentTask === i ? 'ring-2 ring-sawm-purple-400 animate-float' : 'opacity-50'}`}>
+                                <img src={photo} alt={`صورة ${i+1}`} className="w-full h-full object-cover" />
+                                {currentTask > i && (
+                                    <div className="absolute inset-0 bg-sawm-emerald-500/30 flex items-center justify-center">
+                                        <div className="w-6 h-6 rounded-full bg-sawm-emerald-500 flex items-center justify-center"><CheckIcon size={12} /></div>
+                                    </div>
+                                )}
+                                {currentTask === i && (
+                                    <div className="absolute inset-0 bg-sawm-purple-500/20 flex items-center justify-center">
+                                        <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+                                    </div>
+                                )}
+                            </div>
+                        )) : (
+                            <div className="w-20 h-20 rounded-2xl bg-sawm-purple-50 flex items-center justify-center animate-float">
+                                <AIChipIcon size={36} />
+                            </div>
+                        )}
+                    </div>
+
+                    {/* Title */}
+                    <h3 className="text-lg font-bold text-gray-900 mb-1">{isValidating ? 'جاري فحص جودة الصور...' : 'جاري تحليل الصورة بذكاء سَوم...'}</h3>
+                    <p className="text-gray-400 text-xs mb-8">{isValidating ? 'نتأكد إن الصور واضحة ومتطابقة 🔍' : 'ثوانٍ بسيطة وجاهز 🚀'}</p>
+
+                    {/* Progress bar */}
+                    <div className="w-full max-w-xs mb-6">
+                        <div className="flex justify-between items-center mb-2">
+                            <span className="text-xs text-gray-400">التقدّم</span>
+                            <span className="text-xs font-bold text-sawm-purple-600">{Math.round(progress)}%</span>
+                        </div>
+                        <div className="w-full h-2 bg-gray-100 rounded-full overflow-hidden">
+                            <div
+                                className="h-full rounded-full progress-gradient transition-all duration-300 ease-out relative"
+                                style={{ width: `${progress}%` }}
+                            >
+                                <div className="absolute inset-0 shimmer-bg rounded-full"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    {/* Task list */}
+                    <div className="w-full max-w-xs space-y-2">
+                        {tasks.map((task, i) => {
+                            const isActive = currentTask === i;
+                            const isDone = currentTask > i;
+                            return (
+                                <div key={i} className={`
+                                    flex items-center gap-3 px-4 py-2.5 rounded-xl transition-all duration-300
+                                    ${isDone ? 'bg-sawm-emerald-50' : isActive ? 'bg-sawm-purple-50' : 'bg-gray-50'}
+                                `}>
+                                    <div className={`w-6 h-6 rounded-full flex items-center justify-center text-xs flex-shrink-0 transition-all duration-300 ${
+                                        isDone ? 'bg-sawm-emerald-500 text-white' :
+                                        isActive ? 'bg-sawm-purple-500 text-white' :
+                                        'bg-gray-200 text-gray-400'
+                                    }`}>
+                                        {isDone ? <CheckIcon size={14} /> : task.icon}
+                                    </div>
+                                    <span className={`text-sm transition-all duration-300 ${
+                                        isDone ? 'text-sawm-emerald-700 font-medium' :
+                                        isActive ? 'text-sawm-purple-700 font-medium' :
+                                        'text-gray-400'
+                                    }`}>{task.label}</span>
+                                    {isActive && (
+                                        <div className="mr-auto flex gap-1">
+                                            {[0,1,2].map(d => (
+                                                <div key={d} className="w-1 h-1 rounded-full bg-sawm-purple-400 animate-bounce" style={{ animationDelay: `${d * 0.15}s` }}/>
+                                            ))}
+                                        </div>
+                                    )}
+                                </div>
+                            );
+                        })}
+                    </div>
+                </div>
+            );
+        };
+
+        /* ───────────── PHOTO CAROUSEL ───────────── */
+        const PhotoCarousel = ({ photos }) => {
+            const [activeIdx, setActiveIdx] = useState(0);
+            return (
+                <div className="relative w-full h-full">
+                    <img src={photos[activeIdx]} alt={`صورة ${activeIdx + 1}`} className="w-full h-full object-cover transition-opacity duration-300" />
+                    {/* Dots */}
+                    <div className="absolute bottom-2 left-0 right-0 flex justify-center gap-1.5">
+                        {photos.map((_, i) => (
+                            <button key={i} onClick={() => setActiveIdx(i)}
+                                className={`w-2 h-2 rounded-full transition-all ${i === activeIdx ? 'bg-white w-4' : 'bg-white/50'}`} />
+                        ))}
+                    </div>
+                    {/* Arrows */}
+                    {activeIdx > 0 && (
+                        <button onClick={() => setActiveIdx(activeIdx - 1)} className="absolute left-2 top-1/2 -translate-y-1/2 w-7 h-7 rounded-full bg-black/30 text-white flex items-center justify-center text-xs hover:bg-black/50">›</button>
+                    )}
+                    {activeIdx < photos.length - 1 && (
+                        <button onClick={() => setActiveIdx(activeIdx + 1)} className="absolute right-2 top-1/2 -translate-y-1/2 w-7 h-7 rounded-full bg-black/30 text-white flex items-center justify-center text-xs hover:bg-black/50">‹</button>
+                    )}
+                    {/* Counter */}
+                    <div className="absolute top-2 left-2 bg-black/40 text-white text-[10px] font-bold px-2 py-0.5 rounded-full">
+                        {activeIdx + 1}/{photos.length}
+                    </div>
+                </div>
+            );
+        };
+
+        /* ───────────── STEP 3: Result & Publish ───────────── */
+        const ResultStep = ({ onPublish, published, aiResult, imagePreview, allPhotos = [] }) => {
+            const [showCard, setShowCard] = useState(false);
+            const [showBtn, setShowBtn] = useState(false);
+            const [editMode, setEditMode] = useState(null); // null | 'price' | 'condition'
+
+            const defaultProduct = {
+                name: 'iPhone 15 Pro Max',
+                nameAr: 'آيفون ١٥ برو ماكس',
+                storage: '256GB',
+                color: 'تيتانيوم أزرق',
+                conditionKey: 'excellent',
+                condition: 'ممتازة — مثل الجديد',
+                conditionScore: 95,
+                price: 3850,
+                suggestedPrice: '٣,٨٥٠',
+                marketRange: '٣,٥٠٠ - ٤,٢٠٠',
+                edited: false,
+            };
+
+            // Map Gemini response {model, condition, price_sar, description_short} to product
+            const mapCondition = (cond) => {
+                if (!cond) return { key: 'good', label: 'جيدة جداً', score: 80 };
+                const c = cond.toLowerCase();
+                if (c.includes('ممتاز') || c.includes('excellent') || c.includes('جديد') || c.includes('new')) return { key: 'excellent', label: cond, score: 95 };
+                if (c.includes('جيد') || c.includes('good')) return { key: 'good', label: cond, score: 80 };
+                if (c.includes('مقبول') || c.includes('fair') || c.includes('متوسط')) return { key: 'fair', label: cond, score: 60 };
+                return { key: 'good', label: cond, score: 80 };
+            };
+
+            const initialProduct = aiResult ? (() => {
+                const cond = mapCondition(aiResult.condition);
+                const price = aiResult.price_sar || defaultProduct.price;
+                const priceLow = aiResult.market_range_low || Math.round(price * 0.9);
+                const priceHigh = aiResult.market_range_high || Math.round(price * 1.1);
+                return {
+                    ...defaultProduct,
+                    name: aiResult.model || defaultProduct.name,
+                    nameAr: aiResult.model || defaultProduct.nameAr,
+                    storage: aiResult.storage || '',
+                    color: aiResult.color || '',
+                    conditionKey: cond.key,
+                    condition: cond.label,
+                    conditionScore: cond.score,
+                    conditionDetails: aiResult.condition_details || '',
+                    price: price,
+                    priceLow: priceLow,
+                    priceHigh: priceHigh,
+                    suggestedPrice: new Intl.NumberFormat('ar-SA').format(price),
+                    marketRange: `${new Intl.NumberFormat('ar-SA').format(priceLow)} - ${new Intl.NumberFormat('ar-SA').format(priceHigh)}`,
+                    descriptionShort: aiResult.marketing_description || aiResult.description_short || '',
+                };
+            })() : defaultProduct;
+
+            const [productData, setProductData] = useState(initialProduct);
+
+            useEffect(() => {
+                const t1 = setTimeout(() => setShowCard(true), 200);
+                const t2 = setTimeout(() => setShowBtn(true), 800);
+                return () => { clearTimeout(t1); clearTimeout(t2); };
+            }, []);
+
+            const formatPriceAr = (p) => new Intl.NumberFormat('ar-SA').format(p);
+
+            const handleSaveEdit = (changes) => {
+                setProductData(prev => {
+                    const updated = { ...prev, edited: true };
+                    if (changes.price !== undefined) {
+                        updated.price = changes.price;
+                        updated.suggestedPrice = formatPriceAr(changes.price);
+                    }
+                    if (changes.conditionKey) {
+                        updated.conditionKey = changes.conditionKey;
+                        updated.condition = changes.conditionLabel;
+                        updated.conditionScore = changes.conditionScore;
+                    }
+                    return updated;
+                });
+                setEditMode(null);
+            };
+
+            const product = productData;
+
+            return (
+                <div className="flex flex-col flex-1 px-5 pt-2 pb-4 overflow-y-auto relative">
+                    {/* Success header */}
+                    <div className="text-center mb-5 animate-slideUp">
+                        <div className="inline-flex items-center justify-center w-14 h-14 rounded-full bg-sawm-emerald-100 mb-3 animate-bounceIn">
+                            <CheckIcon size={28} color="#059669" />
+                        </div>
+                        <h3 className="text-xl font-bold text-gray-900 mb-1">تم التحليل! 🎉</h3>
+                        <p className="text-gray-400 text-xs">سَوم جهّز لك كل شي</p>
+                    </div>
+
+                    {/* Product Card */}
+                    {showCard && (
+                        <div className="bg-white rounded-3xl card-shadow overflow-hidden mb-3 animate-slideUp">
+                            {/* Product photos carousel */}
+                            <div className="relative h-44 bg-gradient-to-br from-gray-100 to-gray-50 flex items-center justify-center overflow-hidden">
+                                {allPhotos.length > 0 ? (
+                                    <PhotoCarousel photos={allPhotos} />
+                                ) : imagePreview ? (
+                                    <img src={imagePreview} alt="المنتج" className="w-full h-full object-cover" />
+                                ) : (
+                                    <div className="text-center">
+                                        <div className="text-5xl mb-2">📱</div>
+                                        <span className="text-xs text-gray-400">صورة المنتج</span>
+                                    </div>
+                                )}
+                                {/* AI Badge */}
+                                <div className="absolute top-3 right-3 glass rounded-full px-3 py-1 flex items-center gap-1.5">
+                                    <SparkleIcon size={12} color="#7c3aed" />
+                                    <span className="text-[10px] font-medium text-sawm-purple-700">تم التحليل بالـ AI</span>
+                                </div>
+                                {/* Condition badge */}
+                                <div className="absolute bottom-3 left-3 bg-sawm-emerald-500 text-white rounded-full px-3 py-1 flex items-center gap-1">
+                                    <ShieldIcon size={12} />
+                                    <span className="text-[10px] font-bold">{product.conditionScore}%</span>
+                                </div>
+                                {/* Edited badge */}
+                                {product.edited && (
+                                    <div className="absolute top-3 left-3 bg-amber-100 text-amber-700 rounded-full px-2.5 py-1 flex items-center gap-1">
+                                        <EditIcon size={10} color="#b45309" />
+                                        <span className="text-[9px] font-bold">معدّل</span>
+                                    </div>
+                                )}
+                            </div>
+
+                            {/* Details */}
+                            <div className="p-5">
+                                {/* Product name */}
+                                <div className="mb-3">
+                                    <h4 className="text-lg font-bold text-gray-900 mb-0.5">
+                                        {product.nameAr}
+                                        {product.storage && product.storage !== 'غير محدد' && <span className="text-sm font-medium text-gray-400 mr-1"> — {product.storage}</span>}
+                                    </h4>
+                                    {product.descriptionShort && (
+                                        <p className="text-[11px] text-gray-400 leading-relaxed" style={{ display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}>{product.descriptionShort}</p>
+                                    )}
+                                </div>
+
+                                {/* Info grid — now tappable */}
+                                <div className="grid grid-cols-2 gap-3 mb-4">
+                                    {/* Condition — tappable */}
+                                    <button
+                                        onClick={() => !published && setEditMode('condition')}
+                                        className="bg-sawm-emerald-50 rounded-2xl p-3 text-right transition-all hover:ring-2 hover:ring-sawm-emerald-300 active:scale-[0.97] relative group"
+                                    >
+                                        <div className="flex items-center gap-1.5 mb-1.5">
+                                            <ShieldIcon size={14} />
+                                            <span className="text-[10px] font-medium text-sawm-emerald-700">حالة اللقطة</span>
+                                            {!published && <span className="mr-auto opacity-0 group-hover:opacity-100 transition-opacity"><EditIcon size={12} color="#059669" /></span>}
+                                        </div>
+                                        <p className="text-[12px] font-bold text-sawm-emerald-800 leading-tight" style={{ display: '-webkit-box', WebkitLineClamp: 1, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}>{product.condition}</p>
+                                        {product.conditionDetails && <p className="text-[9px] text-sawm-emerald-600 mt-0.5 leading-tight" style={{ display: '-webkit-box', WebkitLineClamp: 1, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}>{product.conditionDetails}</p>}
+                                    </button>
+                                    {/* Price — tappable */}
+                                    <button
+                                        onClick={() => !published && setEditMode('price')}
+                                        className="bg-sawm-purple-50 rounded-2xl p-3 text-right transition-all hover:ring-2 hover:ring-sawm-purple-300 active:scale-[0.97] relative group"
+                                    >
+                                        <div className="flex items-center gap-1.5 mb-1.5">
+                                            <TagIcon size={14} color="#7c3aed" />
+                                            <span className="text-[10px] font-medium text-sawm-purple-700">السعر العادل</span>
+                                            {!published && <span className="mr-auto opacity-0 group-hover:opacity-100 transition-opacity"><EditIcon size={12} color="#7c3aed" /></span>}
+                                        </div>
+                                        <p className="text-sm font-bold text-sawm-purple-800">{product.suggestedPrice} ر.س</p>
+                                    </button>
+                                </div>
+
+                                {/* Market range */}
+                                <div className="bg-gray-50 rounded-2xl p-3">
+                                    <div className="flex items-center justify-between mb-2">
+                                        <span className="text-[10px] text-gray-500 font-medium">نطاق السوق</span>
+                                        <span className="text-[10px] text-gray-400">{product.marketRange} ر.س</span>
+                                    </div>
+                                    <div className="relative h-1.5 bg-gray-200 rounded-full">
+                                        <div className="absolute h-full bg-gradient-to-l from-sawm-purple-500 to-sawm-emerald-400 rounded-full" style={{ right: '20%', width: '35%' }}></div>
+                                        <div className="absolute w-3 h-3 bg-white border-2 border-sawm-purple-500 rounded-full -top-[3px]" style={{ right: `${Math.max(5, Math.min(90, ((product.price - 1000) / 5000) * 100))}%`, transition: 'right 0.3s ease' }}></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    )}
+
+                    {/* "Not happy?" link */}
+                    {showCard && !published && (
+                        <div className="flex items-center justify-center gap-4 mb-3 animate-fadeIn" style={{ animationDelay: '0.2s', opacity: 0 }}>
+                            <button onClick={() => setEditMode('price')} className="flex items-center gap-1 text-[11px] text-sawm-purple-500 font-medium hover:text-sawm-purple-700 transition-colors">
+                                <EditIcon size={12} color="currentColor" />
+                                <span>مو موافق على السعر؟</span>
+                            </button>
+                            <div className="w-px h-3 bg-gray-200"></div>
+                            <button onClick={() => setEditMode('condition')} className="flex items-center gap-1 text-[11px] text-sawm-emerald-500 font-medium hover:text-sawm-emerald-700 transition-colors">
+                                <EditIcon size={12} color="currentColor" />
+                                <span>عدّل الحالة</span>
+                            </button>
+                        </div>
+                    )}
+
+                    {/* Trust badge */}
+                    {showCard && (
+                        <div className="flex items-center justify-center gap-2 mb-3 animate-fadeIn" style={{ animationDelay: '0.4s', opacity: 0 }}>
+                            <ShieldIcon size={14} />
+                            <span className="text-[10px] text-sawm-emerald-600 font-medium">إعلانك محمي بنظام سَوم للأمان</span>
+                        </div>
+                    )}
+
+                    {/* Spacer */}
+                    <div className="flex-1 min-h-2"></div>
+
+                    {/* Publish Button */}
+                    {showBtn && (
+                        <div className="animate-slideUp">
+                            <button
+                                onClick={onPublish}
+                                disabled={published}
+                                className={`
+                                    w-full py-4 rounded-2xl text-white font-bold text-base
+                                    flex items-center justify-center gap-2
+                                    transition-all duration-300 ease-out
+                                    ${published
+                                        ? 'bg-sawm-emerald-500'
+                                        : 'bg-gradient-to-l from-sawm-purple-600 via-sawm-purple-500 to-sawm-purple-600 btn-shadow hover:brightness-110 active:scale-[0.98]'
+                                    }
+                                `}
+                            >
+                                {published ? (
+                                    <>
+                                        <CheckIcon size={20} />
+                                        <span>تم نشر الإعلان بنجاح! 🎉</span>
+                                    </>
+                                ) : (
+                                    <>
+                                        <RocketIcon size={18} />
+                                        <span>تم، انشر الإعلان</span>
+                                    </>
+                                )}
+                            </button>
+                            {!published && (
+                                <p className="text-center text-[10px] text-gray-400 mt-2">اضغط على السعر أو الحالة لو تبي تعدّل</p>
+                            )}
+                        </div>
+                    )}
+
+                    {/* Published celebration */}
+                    {published && (
+                        <div className="text-center mt-4 animate-fadeIn">
+                            <p className="text-sm text-gray-500 mb-1">إعلانك الآن مباشر على سَوم</p>
+                            <button className="text-sawm-purple-600 text-sm font-medium hover:underline" onClick={() => window.location.reload()}>
+                                بيع منتج ثاني ←
+                            </button>
+                        </div>
+                    )}
+
+                    {/* Edit Bottom Sheet */}
+                    {editMode && (
+                        <EditSheet
+                            mode={editMode}
+                            product={product}
+                            onSave={handleSaveEdit}
+                            onClose={() => setEditMode(null)}
+                        />
+                    )}
+                </div>
+            );
+        };
+
+        /* ───────────── GEMINI API SERVICE ───────────── */
+        const GEMINI_KEY = 'AIzaSyCJ7NJ5oabtHdqJSA3FhIcqIxzfMBfIE0Y';
+        const GEMINI_URL = (apiKey) => `https://generativelanguage.googleapis.com/v1beta/models/gemini-3-flash-preview:generateContent?key=${apiKey}`;
+
+        // دستور الموديل — System Instruction
+        const SYSTEM_INSTRUCTION = {
+            parts: [{ text: `أنت خبير تقني متخصص في تقييم الجوالات المستعملة في السوق السعودي، تعمل ضمن تطبيق "سَوم AI" في عام 2026.
+
+═══ قاعدة ذهبية ═══
+لا تخمّن الموديل أبداً. حدده فقط بناءً على دليل مادي واضح من الصور.
+أنت تدعم جميع ماركات الجوالات: Apple، Samsung، Huawei، Xiaomi، Google Pixel، OnePlus، Honor، OPPO، Vivo، Nothing، Sony، وغيرها.
+
+══════════════════════════════════════
+        ١. دليل التعرّف على أجهزة Apple iPhone
+══════════════════════════════════════
+
+── iPhone SE (2nd Gen, 2020) ──
+- شاشة: 4.7" مع زر Home فيزيائي + Touch ID
+- كاميرا خلفية: عدسة واحدة
+- المنفذ: Lightning
+- التصميم: مطابق لـ iPhone 8
+- الألوان: أسود، أبيض، أحمر
+
+── iPhone SE (3rd Gen, 2022) ──
+- شاشة: 4.7" مع زر Home فيزيائي + Touch ID
+- كاميرا خلفية: عدسة واحدة
+- المنفذ: Lightning
+- الفرق عن SE 2: نفس التصميم لكن ظهر زجاجي لامع أكثر
+- دعم 5G
+- الألوان: أسود منتصف الليل، أبيض نجمي، أحمر
+
+── iPhone SE 4 (2025) ──
+- شاشة: 6.1" OLED بدون زر Home — أول SE بتصميم حديث
+- الواجهة: Notch (مو Dynamic Island)
+- كاميرا خلفية: عدسة واحدة 48MP كبيرة
+- المنفذ: USB-C
+- زر Action Button موجود
+- الألوان: أسود، أبيض
+
+── iPhone 11 (2019) ──
+- شاشة: 6.1" LCD مع Notch عريض
+- كاميرا خلفية: عدستين بترتيب قطري داخل مربع
+- المنفذ: Lightning
+- الإطار: ألمنيوم
+- الألوان: أسود، أخضر، أصفر، بنفسجي، أحمر، أبيض
+
+── iPhone 11 Pro / Pro Max (2019) ──
+- كاميرا خلفية: ٣ عدسات بترتيب مثلث داخل مربع — ظهر زجاجي مطفي
+- المنفذ: Lightning
+- الإطار: ستانلس ستيل لامع
+- الألوان: أخضر منتصف الليل، ذهبي، فضي، رمادي فلكي
+
+── iPhone 12 / 12 Mini (2020) ──
+- شاشة: 6.1" (12) أو 5.4" (Mini) OLED مع Notch
+- التصميم: حواف مسطحة (أول جيل بعد الرجوع للتصميم المسطح)
+- كاميرا خلفية: عدستين بترتيب قطري
+- المنفذ: Lightning
+- الإطار: ألمنيوم بحواف مسطحة
+- الألوان: أسود، أبيض، أحمر، أخضر، أزرق، بنفسجي
+
+── iPhone 12 Pro / Pro Max (2020) ──
+- كاميرا خلفية: ٣ عدسات بترتيب مثلث + LiDAR
+- المنفذ: Lightning
+- الإطار: ستانلس ستيل لامع بحواف مسطحة
+- الألوان: ذهبي، رمادي جرافيت، فضي، أزرق باسيفيك
+
+── iPhone 13 / 13 Mini (2021) ──
+- شاشة: Notch أصغر من 12
+- كاميرا خلفية: عدستين بترتيب قطري لكن مائل (diagonal) — الفرق الأهم عن 12
+- المنفذ: Lightning
+- الإطار: ألمنيوم
+- الألوان: أسود منتصف الليل، أبيض نجمي، أحمر، أزرق، وردي، أخضر
+
+── iPhone 13 Pro / Pro Max (2021) ──
+- كاميرا خلفية: ٣ عدسات أكبر بشكل ملحوظ من 12 Pro + LiDAR
+- المنفذ: Lightning
+- الإطار: ستانلس ستيل لامع
+- الألوان: رمادي جرافيت، ذهبي، فضي، أزرق سييرا، أخضر ألباين
+
+── iPhone 14 / 14 Plus (2022) ──
+- شاشة: 6.1" (14) أو 6.7" (Plus) مع Notch (مو Dynamic Island!)
+- كاميرا خلفية: عدستين بترتيب قطري
+- المنفذ: Lightning
+- الإطار: ألمنيوم
+- الفرق المهم: iPhone 14 العادي عنده Notch، بينما 14 Pro عنده Dynamic Island
+- الألوان: أسود منتصف الليل، أبيض نجمي، أحمر، أزرق، بنفسجي، أصفر
+
+── iPhone 14 Pro / Pro Max (2022) ──
+- كاميرا خلفية: ٣ عدسات بترتيب مثلث، العدسات أصغر حجماً مقارنة بـ 15 Pro
+- الواجهة: Dynamic Island (أول جيل)
+- المنفذ: Lightning
+- الإطار: ستانلس ستيل مصقول لامع (Glossy)
+- الجوانب: أزرار الصوت + مفتاح الصامت (مفتاح فيزيائي)
+- الألوان: أسود فلكي، بنفسجي غامق، ذهبي، فضي
+
+── iPhone 15 / 15 Plus (2023) ──
+- شاشة: 6.1" (15) أو 6.7" (Plus) مع Dynamic Island (أول مرة بالعادي)
+- كاميرا خلفية: عدستين بترتيب قطري — ظهر زجاجي بلون مطفي ناعم
+- المنفذ: USB-C
+- الإطار: ألمنيوم بحواف منحنية قليلاً
+- مفتاح الصامت الفيزيائي (مو Action Button)
+- الألوان: أسود، أزرق، أخضر، أصفر، وردي
+
+── iPhone 15 Pro / Pro Max (2023) ──
+- كاميرا خلفية: ٣ عدسات بترتيب مثلث، العدسات أكبر بشكل ملحوظ من 14 Pro
+- الواجهة: Dynamic Island
+- المنفذ: USB-C (أول آيفون بـ USB-C)
+- الإطار: تيتانيوم مطفي/مصنفر (Brushed Titanium) — فرق واضح عن 14 Pro اللامع
+- الجوانب: لا يوجد زر Camera Control — يوجد زر Action Button (بدل مفتاح الصامت)
+- الألوان: تيتانيوم طبيعي، أزرق، أبيض، أسود
+- الحواف: أنحف من 14 Pro وأخف وزناً
+
+── iPhone 16 / 16 Plus (2024) ──
+- شاشة: 6.1" (16) أو 6.7" (Plus) مع Dynamic Island
+- كاميرا خلفية: عدستين بترتيب عمودي (رجعت عمودية بدل قطري!) — فرق بصري واضح عن 15
+- المنفذ: USB-C
+- زر Action Button موجود (أول مرة بالعادي)
+- زر Camera Control موجود
+- الإطار: ألمنيوم
+- الألوان: أسود، أبيض، وردي، أخضر فاتح، أزرق فاتح
+
+── iPhone 16 Pro / Pro Max (2024) ──
+- كاميرا خلفية: ٣ عدسات، العدسات أكبر من 15 Pro، ترتيب مثلث أوسع
+- الواجهة: Dynamic Island
+- المنفذ: USB-C
+- الإطار: تيتانيوم مصنفر
+- الجوانب: زر Camera Control (زر جديد تحت زر الباور) — هذا الفارق الأهم!
+- الألوان: تيتانيوم طبيعي، أسود، أبيض، صحراوي
+- الشاشة: أكبر من 15 Pro (6.3" بدل 6.1" للـ Pro)
+
+── iPhone 16e (2025) ──
+- شاشة: 6.1" OLED مع Notch (مو Dynamic Island)
+- كاميرا خلفية: عدسة واحدة 48MP كبيرة
+- المنفذ: USB-C
+- زر Action Button موجود
+- لا يوجد Camera Control
+- الإطار: ألمنيوم
+- الألوان: أسود، أبيض
+- ملاحظة: هذا هو iPhone SE 4 — يُباع باسم iPhone 16e في بعض الأسواق
+
+── iPhone 17 Air (2025) ──
+- أنحف آيفون على الإطلاق (6.25 مم تقريباً)
+- شاشة: 6.6" OLED مع Dynamic Island
+- كاميرا خلفية: عدسة واحدة 48MP داخل شريط كاميرا أفقي (Camera Bar) — نفس تصميم 17 Pro
+- المنفذ: USB-C
+- الإطار: ألمنيوم رفيع جداً
+- زر Action Button + Camera Control
+- مكبر صوت واحد فقط (بسبب النحافة)
+- الألوان: أسود، أبيض
+- الفرق عن 17 Pro: عدسة واحدة بدل ٣، أنحف بكثير، إطار ألمنيوم مو تيتانيوم
+
+── iPhone 17 / 17 Plus (2025) ──
+- شاشة: 6.1" (17) أو 6.7" (Plus) مع Dynamic Island
+- كاميرا خلفية: عدستين داخل شريط كاميرا أفقي (Camera Bar) — تصميم جديد
+- المنفذ: USB-C
+- الإطار: ألمنيوم
+- زر Action Button + Camera Control
+- الظهر: ألمنيوم كامل (مو نصف ونصف زي Pro)
+- الألوان: أسود، أبيض، أخضر، أزرق
+
+── iPhone 17 Pro / Pro Max (2025) ──
+- تصميم مختلف جذرياً: الظهر نصفه ألمنيوم ونصفه زجاج
+- كاميرا خلفية: شريط كاميرا أفقي بارز (Camera Bar) مع ٣ عدسات
+- الواجهة: Dynamic Island أصغر + كاميرا أمامية بموقع جديد تحت الشاشة
+- المنفذ: USB-C
+- الإطار: تيتانيوم
+- زر Camera Control + Action Button
+- الألوان: تيتانيوم طبيعي، أسود، أبيض
+
+══════════════════════════════════════
+        ٢. دليل التعرّف على أجهزة Samsung Galaxy
+══════════════════════════════════════
+
+── Galaxy S21 / S21+ / S21 Ultra (2021) ──
+- كاميرا خلفية: وحدة كاميرا تندمج مع الإطار (Contour Cut) — تصميم مميز
+- S21/S21+: عدستين + واسعة | S21 Ultra: ٤ عدسات + S Pen support
+- الشاشة: ثقب كاميرا أمامية في المنتصف (Punch-hole)
+- المنفذ: USB-C
+- بدون شاحن في العلبة (أول جيل)
+- S21 Ultra: إطار لامع، باقي الفئات: إطار مطفي
+
+── Galaxy S22 / S22+ / S22 Ultra (2022) ──
+- S22/S22+: وحدة كاميرا مشابهة لـ S21 لكن أصغر حجماً
+- S22 Ultra: تصميم مستطيل بزوايا حادة يشبه Note — مع قلم S Pen مدمج داخل الجهاز
+- S22 Ultra: ٤ عدسات خلفية منفصلة (بدون وحدة كاميرا بارزة — العدسات مدمجة في الظهر)
+- المنفذ: USB-C
+
+── Galaxy S23 / S23+ / S23 Ultra (2023) ──
+- S23/S23+: عدسات خلفية منفصلة مدمجة بالظهر (بدون وحدة كاميرا بارزة) — تصميم جديد
+- S23 Ultra: نفس تصميم S22 Ultra تقريباً مع زوايا أكثر استدارة + S Pen مدمج
+- الشاشة: حواف أنحف من S22
+- المنفذ: USB-C
+
+── Galaxy S24 / S24+ / S24 Ultra (2024) ──
+- S24 Ultra: إطار تيتانيوم مسطح (أول Galaxy بتيتانيوم) — حواف مسطحة تماماً
+- S24 Ultra: ٤ عدسات خلفية + S Pen مدمج
+- S24/S24+: ٣ عدسات خلفية منفصلة
+- الشاشة: حواف أنحف، زوايا الشاشة أكثر حدة من S23
+- المنفذ: USB-C
+- الألوان Ultra: تيتانيوم رمادي، أسود، بنفسجي، أصفر
+
+── Galaxy S25 / S25+ / S25 Ultra (2025) ──
+- S25 Ultra: زوايا مستديرة أكثر من S24 Ultra — أول Ultra بتصميم دائري ناعم
+- S25 Ultra: إطار تيتانيوم، ٤ عدسات خلفية + S Pen مدمج
+- S25/S25+: ٣ عدسات خلفية منفصلة
+- الشاشة: حواف أنحف من أي Galaxy سابق
+- One UI 7 مع Galaxy AI
+- المنفذ: USB-C
+- الألوان Ultra: تيتانيوم فضي، أسود، رمادي، أبيض
+
+── Galaxy Z Fold 5 (2023) ──
+- جوال قابل للطي — ينفتح لشاشة داخلية 7.6"
+- شاشة خارجية: 6.2"
+- كاميرا خلفية: ٣ عدسات
+- مفصل أنحف من Fold 4
+- المنفذ: USB-C
+
+── Galaxy Z Fold 6 (2024) ──
+- شاشة خارجية: 6.3" أعرض من Fold 5
+- شاشة داخلية: 7.6"
+- حواف مسطحة أكثر — تصميم أكثر حدة وزوايا
+- أخف وأنحف من Fold 5
+- المنفذ: USB-C
+
+── Galaxy Z Flip 5 (2023) ──
+- جوال صدفي قابل للطي
+- شاشة خارجية: 3.4" كبيرة تغطي معظم الغطاء (Flex Window)
+- كاميرا خلفية: عدستين بجانب الشاشة الخارجية
+- المنفذ: USB-C
+
+── Galaxy Z Flip 6 (2024) ──
+- شبيه بـ Flip 5 لكن حواف أكثر استدارة
+- شاشة خارجية: 3.4"
+- كاميرا خلفية: عدستين — عدسة رئيسية 50MP محسّنة
+- المنفذ: USB-C
+
+── Galaxy A series (A14, A15, A25, A34, A35, A54, A55) ──
+- أجهزة اقتصادية/متوسطة
+- عادة: ظهر بلاستيكي أو زجاجي حسب الفئة
+- كاميرا خلفية: ٢-٤ عدسات حسب الموديل
+- الفرق عن S series: مواد أقل جودة، كاميرا أبسط، حواف أعرض
+- A55/A54: تصميم قريب من S series مع ظهر زجاجي
+- A35/A34: ظهر زجاجي بتصميم أبسط
+- A25/A15/A14: ظهر بلاستيكي
+
+══════════════════════════════════════
+        ٣. دليل التعرّف على أجهزة Huawei
+══════════════════════════════════════
+
+── Huawei P60 Pro (2023) ──
+- كاميرا خلفية: وحدة كاميرا دائرية كبيرة مع ٣ عدسات
+- الشاشة: منحنية من الجوانب، ثقب كاميرا في المنتصف
+- المنفذ: USB-C
+- بدون خدمات Google
+
+── Huawei P70 / P70 Pro / P70 Art (2024) ──
+- P70 Art: وحدة كاميرا مثلثة مميزة جداً
+- P70 Pro: وحدة كاميرا دائرية
+- المنفذ: USB-C
+- بدون خدمات Google
+
+── Huawei Mate 60 Pro (2023) ──
+- كاميرا خلفية: وحدة دائرية كبيرة مع حلقة ذهبية/فضية
+- الشاشة: منحنية، Notch صغير أو ثقب
+- المنفذ: USB-C
+- دعم اتصالات القمر الصناعي
+
+── Huawei Mate X5 / X6 (2023-2024) ──
+- جوال قابل للطي للداخل (مثل Galaxy Fold)
+- Mate X6: وحدة كاميرا دائرية كبيرة مع تصميم سداسي حول العدسات
+- المنفذ: USB-C
+
+── Huawei Nova 12 / 12 Pro / 12 Ultra (2024) ──
+- أجهزة متوسطة-عالية
+- وحدة كاميرا خلفية دائرية أو بيضوية
+- شاشة مسطحة أو منحنية حسب الفئة
+- المنفذ: USB-C
+
+══════════════════════════════════════
+        ٤. دليل التعرّف على أجهزة Xiaomi
+══════════════════════════════════════
+
+── Xiaomi 14 / 14 Pro / 14 Ultra (2024) ──
+- 14 Ultra: وحدة كاميرا دائرية ضخمة بارزة جداً مع شعار Leica
+- 14 Pro: وحدة كاميرا مربعة كبيرة
+- 14: وحدة كاميرا مربعة أصغر مع شعار Leica
+- المنفذ: USB-C
+
+── Xiaomi 15 / 15 Pro / 15 Ultra (2025) ──
+- 15 Ultra: وحدة كاميرا دائرية ضخمة مع عدسة بيريسكوب + Leica
+- 15 Pro: وحدة كاميرا مربعة مع ٣ عدسات + Leica
+- 15: أصغر حجماً، وحدة كاميرا مربعة + Leica
+- المنفذ: USB-C
+
+── Xiaomi MIX Fold 4 (2024) ──
+- جوال قابل للطي — أنحف قابل للطي في العالم وقت إصداره
+- كاميرا خلفية مع عدسة Leica
+- المنفذ: USB-C
+
+── Redmi Note 13 / 13 Pro / 13 Pro+ (2024) ──
+- أجهزة اقتصادية شائعة جداً
+- وحدة كاميرا مستطيلة أو مربعة
+- Note 13 Pro+: ظهر زجاجي منحني
+- Note 13: ظهر بلاستيكي
+- المنفذ: USB-C
+
+── Redmi Note 14 / 14 Pro / 14 Pro+ (2025) ──
+- وحدة كاميرا دائرية أو مستطيلة حسب الفئة
+- 14 Pro+: وحدة كاميرا بارزة مع عدسة كبيرة
+- المنفذ: USB-C
+
+── POCO F6 / F6 Pro (2024) ──
+- أجهزة أداء عالي بسعر متوسط
+- وحدة كاميرا مستطيلة عمودية
+- المنفذ: USB-C
+- ظهر زجاجي أو جلدي
+
+══════════════════════════════════════
+        ٥. دليل التعرّف على أجهزة Google Pixel
+══════════════════════════════════════
+
+── Pixel 8 / 8 Pro (2023) ──
+- شريط كاميرا أفقي ممتد من جنب لجنب (Camera Bar) — علامة Pixel المميزة
+- 8 Pro: ٣ عدسات + مستشعر حرارة
+- 8: عدستين
+- المنفذ: USB-C
+- الألوان: أسود Obsidian، أخضر Hazel، وردي Rose
+
+── Pixel 9 / 9 Pro / 9 Pro Fold (2024) ──
+- تغيير تصميم جذري: وحدة كاميرا بيضوية أفقية منفصلة (مو شريط كامل)
+- حواف مسطحة (متأثر بتصميم iPhone)
+- 9 Pro: ٣ عدسات داخل الوحدة البيضوية
+- 9: عدستين
+- 9 Pro Fold: قابل للطي
+- المنفذ: USB-C
+
+── Pixel 9a (2025) ──
+- تصميم مبسط: وحدة كاميرا بيضوية أفقية بارزة بشكل أقل
+- عدستين خلفية
+- إطار بلاستيكي/ألمنيوم
+- المنفذ: USB-C
+
+══════════════════════════════════════
+        ٦. دليل التعرّف على أجهزة OnePlus
+══════════════════════════════════════
+
+── OnePlus 12 (2024) ──
+- وحدة كاميرا دائرية كبيرة مع شعار Hasselblad
+- شاشة منحنية من الجوانب
+- المنفذ: USB-C
+- ظهر زجاجي بلمسة حريرية
+
+── OnePlus 13 (2025) ──
+- وحدة كاميرا دائرية مع Hasselblad
+- شاشة مسطحة (تغيير من المنحنية)
+- حواف معدنية مسطحة
+- المنفذ: USB-C
+- IP69 مقاومة ماء
+
+── OnePlus Open / Open 2 (2023-2025) ──
+- جوال قابل للطي
+- وحدة كاميرا دائرية مع Hasselblad
+- المنفذ: USB-C
+
+══════════════════════════════════════
+        ٧. دليل التعرّف على أجهزة Honor
+══════════════════════════════════════
+
+── Honor Magic 6 Pro (2024) ──
+- وحدة كاميرا دائرية كبيرة بتصميم "عين"
+- شاشة منحنية رباعية (من كل الجوانب)
+- المنفذ: USB-C
+
+── Honor Magic 7 Pro (2025) ──
+- وحدة كاميرا مثلثة/سداسية مميزة
+- شاشة مسطحة أو منحنية
+- المنفذ: USB-C
+
+── Honor Magic V3 (2024) ──
+- أنحف جوال قابل للطي (9.2 مم)
+- وحدة كاميرا سداسية الشكل
+- المنفذ: USB-C
+
+══════════════════════════════════════
+        ٨. أجهزة أخرى شائعة
+══════════════════════════════════════
+
+── Nothing Phone (2a) / Phone (2) (2024) ──
+- ظهر شفاف يظهر أضواء LED (Glyph Interface) — تصميم فريد جداً
+- المنفذ: USB-C
+
+── Sony Xperia 1 VI / 5 V (2024) ──
+- شاشة طويلة بنسبة 21:9
+- المنفذ: USB-C
+- زر مخصص للكاميرا على الجنب
+
+── OPPO Find X7 Ultra (2024) / Find X8 Pro (2024) ──
+- وحدة كاميرا دائرية كبيرة مع Hasselblad
+- المنفذ: USB-C
+
+── Vivo X200 Pro (2024) ──
+- وحدة كاميرا دائرية مع ZEISS
+- المنفذ: USB-C
+
+══════════════════════════════════════
+        بروتوكول التدقيق العام
+══════════════════════════════════════
+
+═══ الخطوة ١: تحديد الماركة ═══
+1. شعار الماركة: ابحث عن شعار Apple/Samsung/Huawei/Xiaomi/Google/OnePlus/Honor على الظهر
+2. شكل وحدة الكاميرا: كل ماركة لها تصميم مميز
+3. تصميم الواجهة: Notch/Dynamic Island/ثقب/كاميرا تحت الشاشة
+
+═══ الخطوة ٢: تحديد الموديل (iPhone) ═══
+1. المنفذ: Lightning = iPhone 14 أو أقدم. USB-C = iPhone 15 أو أحدث.
+2. زر Camera Control: موجود = iPhone 16 أو أحدث.
+3. مفتاح الصامت vs Action Button: مفتاح فيزيائي = iPhone 14 أو أقدم.
+4. ملمس الإطار: ستانلس ستيل لامع = 14 Pro أو أقدم. تيتانيوم مصنفر = 15 Pro أو أحدث.
+5. شكل الكاميرا الخلفية: مربع مثلث = 14/15/16. شريط أفقي = 17 series.
+6. عدد العدسات الخلفية: واحدة = SE/Air/16e. اثنتين = العادي/Plus. ثلاث = Pro/Pro Max.
+7. الواجهة: زر Home = SE قديم. Notch = 11/12/13/14 العادي/SE4/16e. Dynamic Island = 14 Pro/15/16/17.
+8. النحافة الشديدة + عدسة واحدة + Camera Bar = iPhone 17 Air.
+
+═══ الخطوة ٢: تحديد الموديل (Samsung) ═══
+1. S Pen مدمج = S22 Ultra أو أحدث Ultra
+2. وحدة كاميرا تندمج مع الإطار = S21 series
+3. عدسات منفصلة بدون وحدة بارزة = S23/S24/S25
+4. إطار تيتانيوم مسطح = S24 Ultra أو S25 Ultra
+5. زوايا مستديرة Ultra = S25 Ultra. زوايا حادة Ultra = S22/S23/S24 Ultra
+6. قابل للطي كتاب = Z Fold. قابل للطي صدفي = Z Flip
+7. شاشة خارجية كبيرة على الـ Flip = Flip 5 أو أحدث
+
+═══ الخطوة ٣: التحقق ═══
+- إذا ما تقدر تشوف المنفذ أو الجوانب بوضوح → خفّض confidence_score تحت 70
+- إذا الفروقات ما تكفي للجزم → اذكر الموديلين المحتملين في suggested_name
+- إذا الجهاز مو جوال → وضّح ذلك
+- إذا الماركة غير معروفة → حاول تحددها من التصميم العام وشعار الماركة
+
+═══ اللهجة ═══
+- الرد دائماً بلهجة سعودية بيضاء احترافية ومختصرة.
+- الوصف التسويقي لازم يكون جذاب ومختصر بنفس اللهجة.` }]
+        };
+
+        // دالة التحقق من جودة الصور قبل التحليل
+        async function validateImages(base64Images, apiKey) {
+            const API_KEY = apiKey || GEMINI_KEY;
+            const url = GEMINI_URL(API_KEY);
+
+            const prompt = `أنت نظام تحقق صارم من جودة صور الأجهزة الإلكترونية. لازم تفحص كل صورة بالتفصيل.
+
+معك ٣ صور بالترتيب:
+- الصورة ١: المفروض الواجهة الأمامية (الشاشة)
+- الصورة ٢: المفروض الظهر (الخلف والكاميرا)
+- الصورة ٣: المفروض الجوانب (الأطراف والمنافذ)
+
+افحص كل صورة واحدة واحدة بالترتيب وتأكد من كل النقاط التالية:
+
+═══ ١. ترتيب الزوايا ═══
+- الصورة ١: لازم تكون للشاشة الأمامية للجوال. إذا تبيّن إنها للخلف أو للجنب أو صورة عشوائية مو لجوال → ارفض.
+- الصورة ٢: لازم تكون للظهر (الخلف). إذا تبيّن إنها نفس زاوية الأولى أو مو للخلف → ارفض.
+- الصورة ٣: لازم تكون للجنب أو الأطراف. إذا تبيّن إنها تكرار لزاوية سابقة → ارفض.
+
+═══ ٢. جسم الجهاز كامل ═══
+- كل صورة لازم تظهر الجهاز كامل من فوق لتحت. إذا الصورة مقصوصة أو تظهر جزء بسيط فقط من الجهاز (مثلاً بس الكاميرا أو بس نص الشاشة) → ارفض.
+
+═══ ٣. الإضاءة والوضوح ═══
+- كل صورة لازم تكون واضحة وإضاءتها كافية. إذا أي صورة مظلمة أو مهزوزة (blurry) أو فيها انعكاس قوي يغطي الجهاز → ارفض.
+- حدد رقم الصورة اللي فيها المشكلة.
+
+═══ ٤. تطابق الجهاز ═══
+- الصور الثلاث لازم تكون لنفس الجهاز بالضبط. قارن: اللون، شكل الكاميرات، حجم الشاشة، تصميم الحواف، الأزرار.
+- إذا أي صورة واضح إنها لجهاز مختلف → ارفض فوراً.
+
+رد بصيغة JSON فقط بدون أي نص إضافي:
+{
+  "isValid": true أو false,
+  "errorMessage": "رسالة خطأ محددة بالعربي لهجة سعودية بيضاء توضح المشكلة بالضبط ورقم الصورة المشكلة",
+  "errorType": "front_view|back_view|side_view|incomplete_body|lighting|blur|mismatch|none",
+  "failedPhoto": 0
+}
+
+حقل failedPhoto = رقم الصورة اللي فيها المشكلة (1 أو 2 أو 3)، أو 0 إذا المشكلة عامة أو ما فيه مشكلة.
+
+أمثلة لرسائل الخطأ:
+- "الصورة الأولى مو للشاشة الأمامية، نبيك تصوّر الشاشة أول شي 📱"
+- "الصورة الثانية مو للخلف، صوّر ظهر الجوال والكاميرا 🔄"
+- "الصورة الثالثة مو للجنب، صوّر الأطراف والمنافذ 📐"
+- "الصورة الثانية ما تظهر الجهاز كامل، بعّد شوي عشان يبان كله 📏"
+- "الصورة الأولى طالعة غامقة، حسّن الإضاءة وصوّر مرة ثانية 💡"
+- "الصورة الثالثة مهزوزة، ثبّت يدك وصوّر بهدوء 📸"
+- "الصور تبدو لأجهزة مختلفة! لازم تصوّر نفس الجهاز من كل الزوايا 🔄"
+
+إذا كل شي تمام:
+{"isValid": true, "errorMessage": "", "errorType": "none", "failedPhoto": 0}`;
+
+            const parts = [{ text: prompt }];
+            base64Images.forEach((img) => {
+                parts.push({ inline_data: { mime_type: "image/jpeg", data: img } });
+            });
+
+            const response = await fetch(url, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ system_instruction: SYSTEM_INSTRUCTION, contents: [{ parts }] })
+            });
+
+            if (!response.ok) {
+                const errData = await response.json().catch(() => ({}));
+                throw new Error(errData?.error?.message || `خطأ من Gemini API: ${response.status}`);
+            }
+
+            const data = await response.json();
+            const text = data.candidates?.[0]?.content?.parts?.[0]?.text || '';
+            const jsonMatch = text.match(/\{[\s\S]*\}/);
+            if (!jsonMatch) throw new Error('لم يتمكن النظام من التحقق من الصور');
+            return JSON.parse(jsonMatch[0]);
+        }
+
+        // دالة تحليل الصورة باستخدام Gemini 3 Flash
+        async function analyzeProductImage(base64Images, apiKey) {
+            const API_KEY = apiKey || GEMINI_KEY;
+            const url = GEMINI_URL(API_KEY);
+
+            const prompt = `أنت خبير تقييم جوالات مستعملة في السوق السعودي. تقدر تتعرف على جميع الماركات: Apple iPhone (كل الموديلات بما فيها Air و SE و العادي و Pro)، Samsung Galaxy (S/Z/A series)، Huawei، Xiaomi/Redmi/POCO، Google Pixel، OnePlus، Honor، OPPO، Vivo، Nothing، Sony، وغيرها.
+
+معك ٣ صور لجهاز واحد (أمامية، خلفية، جانبية). حلل الصور الثلاث مع بعض وأعطني تقييم شامل.
+
+استخدم دليل التعرّف الموجود في System Instruction لتحديد الموديل بدقة. ركّز على:
+- شعار الماركة على الظهر
+- شكل وحدة الكاميرا الخلفية (عدد العدسات، ترتيبها، شكل الوحدة)
+- نوع المنفذ (Lightning/USB-C)
+- تصميم الواجهة (Notch/Dynamic Island/Punch-hole/زر Home)
+- الأزرار الجانبية (Camera Control/Action Button/مفتاح الصامت)
+- مواد الإطار (ألمنيوم/ستانلس ستيل/تيتانيوم)
+- هل الجهاز قابل للطي؟
+
+المطلوب:
+1. حدد نوع الجهاز بدقة (الماركة، الموديل، السعة التخزينية إن أمكن)
+2. قيّم الحالة البصرية من الصور: هل فيه خدوش؟ كسور؟ تغير لون؟ آثار استخدام؟
+3. قدّر السعر المناسب بالريال السعودي حسب السوق السعودي الحالي (2026)
+4. اكتب وصف تسويقي قصير بلهجة سعودية بيضاء (جملة أو جملتين)
+5. حدد نسبة ثقتك بالتحليل (confidence_score): إذا الصور مو واضحة أو الجهاز صعب تحديده، خلّ النسبة أقل من 70
+
+رد بصيغة JSON فقط بدون أي نص إضافي:
+{
+  "model": "الاسم الكامل للجهاز مثلاً Samsung Galaxy S25 Ultra أو iPhone 17 Air",
+  "brand": "الماركة مثلاً Apple أو Samsung أو Huawei",
+  "storage": "السعة التخزينية مثلاً 256GB (إذا ما تقدر تحدد اكتب غير محدد)",
+  "color": "لون الجهاز",
+  "condition": "ممتازة/جيدة جداً/جيدة/مقبولة",
+  "condition_details": "وصف مختصر للحالة مثلاً: بدون خدوش، شاشة نظيفة، إطار سليم",
+  "price_sar": 2500,
+  "market_range_low": 2200,
+  "market_range_high": 2800,
+  "confidence_score": 85,
+  "marketing_description": "وصف تسويقي بلهجة سعودية بيضاء - جملة أو جملتين",
+  "suggested_name": "اسم مقترح إذا كانت الثقة أقل من 70",
+  "identification_clues": "الأدلة اللي استخدمتها لتحديد الموديل (مثلاً: USB-C + Camera Bar + عدسة واحدة = iPhone 17 Air)"
+}
+
+مهم:
+- price_sar و market_range_low و market_range_high لازم أرقام بالريال السعودي لسنة 2026
+- confidence_score رقم من 0 إلى 100
+- الوصف التسويقي لازم بلهجة سعودية بيضاء وقصير
+- حقل brand مهم عشان نعرض الشعار الصحيح`;
+
+            // Build parts: prompt + 3 images
+            const parts = [{ text: prompt }];
+            base64Images.forEach((img) => {
+                parts.push({ inline_data: { mime_type: "image/jpeg", data: img } });
+            });
+
+            const requestBody = {
+                system_instruction: SYSTEM_INSTRUCTION,
+                contents: [{ parts }]
+            };
+            const response = await fetch(url, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(requestBody)
+            });
+
+            if (!response.ok) {
+                const errData = await response.json().catch(() => ({}));
+                throw new Error(errData?.error?.message || `خطأ من Gemini API: ${response.status}`);
+            }
+
+            const data = await response.json();
+            const text = data.candidates?.[0]?.content?.parts?.[0]?.text || '';
+
+            // Extract JSON from response (handle markdown code blocks)
+            const jsonMatch = text.match(/\{[\s\S]*\}/);
+            if (!jsonMatch) throw new Error('لم يتمكن الذكاء الاصطناعي من تحليل الصورة');
+
+            return JSON.parse(jsonMatch[0]);
+        }
+
+        /* ───────────── CONFIDENCE CONFIRMATION MODAL ───────────── */
+        const ConfidenceModal = ({ aiResult, onConfirm, onRetry }) => (
+            <div className="absolute inset-0 z-50 flex items-center justify-center sheet-overlay" style={{ background: 'rgba(0,0,0,0.5)' }}>
+                <div className="bg-white rounded-3xl p-6 mx-6 w-full max-w-sm animate-scaleIn">
+                    <div className="text-center mb-4">
+                        <div className="inline-flex items-center justify-center w-14 h-14 rounded-full bg-amber-100 mb-3">
+                            <span className="text-2xl">🤔</span>
+                        </div>
+                        <h3 className="text-lg font-bold text-gray-900 mb-2">الصور غير واضحة</h3>
+                        <p className="text-sm text-gray-500 leading-relaxed mb-1">نسبة الثقة: <span className="font-bold text-amber-600">{aiResult.confidence_score}%</span></p>
+                        <p className="text-sm text-gray-600 leading-relaxed">
+                            هل تقصد جهاز <span className="font-bold text-sawm-purple-600">{aiResult.suggested_name || aiResult.model}</span>؟
+                        </p>
+                    </div>
+                    {aiResult.condition_details && (
+                        <div className="bg-gray-50 rounded-2xl p-3 mb-4 text-center">
+                            <p className="text-xs text-gray-500">{aiResult.condition_details}</p>
+                        </div>
+                    )}
+                    <div className="flex gap-2">
+                        <button onClick={onRetry} className="flex-1 py-3 rounded-xl bg-gray-100 text-gray-600 font-medium text-sm hover:bg-gray-200 transition-all">
+                            أعيد التصوير 📸
+                        </button>
+                        <button onClick={onConfirm} className="flex-1 py-3 rounded-xl bg-gradient-to-l from-sawm-purple-600 to-sawm-purple-500 text-white font-bold text-sm btn-shadow hover:brightness-110 active:scale-[0.98] transition-all">
+                            إيه، صح 👍
+                        </button>
+                    </div>
+                </div>
+            </div>
+        );
+
+        /* ───────────── VALIDATION ERROR MODAL ───────────── */
+        const ValidationErrorModal = ({ errorMessage, errorType, failedPhoto, photos, onRetry, onPartialRetry }) => {
+            const errorIcons = {
+                front_view: '📱',
+                back_view: '🔄',
+                side_view: '📐',
+                incomplete_body: '📏',
+                lighting: '💡',
+                blur: '📸',
+                mismatch: '🔄',
+                none: '⚠️',
+            };
+            const errorTitles = {
+                front_view: 'الصورة الأمامية غلط',
+                back_view: 'الصورة الخلفية غلط',
+                side_view: 'الصورة الجانبية غلط',
+                incomplete_body: 'الجهاز مو باين كامل',
+                lighting: 'الإضاءة ضعيفة',
+                blur: 'الصور مو واضحة',
+                mismatch: 'الأجهزة مختلفة!',
+                none: 'فيه مشكلة بالصور',
+            };
+            const photoLabels = ['الأمامية', 'الخلفية', 'الجوانب'];
+            const icon = errorIcons[errorType] || '⚠️';
+            const title = errorTitles[errorType] || 'فيه مشكلة بالصور';
+            // failedPhoto: 1,2,3 = specific photo, 0 = general
+            const failedIdx = (failedPhoto || 0) - 1;
+
+            return (
+                <div className="absolute inset-0 z-50 flex items-center justify-center sheet-overlay" style={{ background: 'rgba(0,0,0,0.5)' }}>
+                    <div className="bg-white rounded-3xl p-6 mx-6 w-full max-w-sm animate-scaleIn">
+                        {/* Error icon */}
+                        <div className="text-center mb-4">
+                            <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-red-50 mb-3 animate-bounceIn">
+                                <span className="text-3xl">{icon}</span>
+                            </div>
+                            <h3 className="text-lg font-bold text-gray-900 mb-2">{title}</h3>
+                            <p className="text-sm text-gray-600 leading-relaxed">{errorMessage}</p>
+                        </div>
+
+                        {/* Show photos with the problematic one highlighted */}
+                        {photos && photos.length > 0 && (
+                            <div className="flex items-center justify-center gap-2 mb-4">
+                                {photos.map((photo, i) => {
+                                    const isFailed = failedIdx === i || (failedIdx < 0 && errorType === 'mismatch');
+                                    return (
+                                        <div key={i} className="flex flex-col items-center gap-1">
+                                            <div className={`relative w-16 h-16 rounded-xl overflow-hidden border-2 transition-all ${
+                                                isFailed ? 'border-red-400 ring-2 ring-red-200' : 'border-sawm-emerald-300'
+                                            }`}>
+                                                <img src={photo} alt={`صورة ${i+1}`} className="w-full h-full object-cover" />
+                                                {isFailed && (
+                                                    <div className="absolute inset-0 bg-red-500/25 flex items-center justify-center">
+                                                        <CloseIcon size={20} color="#ef4444" />
+                                                    </div>
+                                                )}
+                                                {!isFailed && (
+                                                    <div className="absolute bottom-0.5 left-0.5 w-4 h-4 rounded-full bg-sawm-emerald-500 flex items-center justify-center">
+                                                        <CheckIcon size={10} />
+                                                    </div>
+                                                )}
+                                            </div>
+                                            <span className={`text-[9px] font-medium ${isFailed ? 'text-red-500' : 'text-sawm-emerald-600'}`}>
+                                                {photoLabels[i]}
+                                            </span>
+                                        </div>
+                                    );
+                                })}
+                            </div>
+                        )}
+
+                        {/* Tips */}
+                        <div className="bg-gray-50 rounded-2xl p-3 mb-5">
+                            <div className="flex items-center gap-2 mb-1">
+                                <AIChipIcon size={14} />
+                                <span className="text-[10px] font-bold text-gray-500">نصيحة سَوم</span>
+                            </div>
+                            <p className="text-[11px] text-gray-500 leading-relaxed">
+                                {errorType === 'front_view' && 'الصورة الأولى لازم تكون للشاشة الأمامية مباشرة. صوّر الشاشة بشكل واضح.'}
+                                {errorType === 'back_view' && 'الصورة الثانية لازم تكون لظهر الجوال. اقلب الجهاز وصوّر الكاميرا والغطاء.'}
+                                {errorType === 'side_view' && 'الصورة الثالثة لازم تكون للجوانب. صوّر الأطراف والأزرار والمنافذ.'}
+                                {errorType === 'incomplete_body' && 'لازم الجهاز يبان كامل بالصورة من فوق لتحت. بعّد الكاميرا شوي عشان يبان كله.'}
+                                {errorType === 'lighting' && 'صوّر في مكان فيه إضاءة طبيعية أو ضوء أبيض قوي. تجنّب الأماكن المظلمة.'}
+                                {errorType === 'blur' && 'ثبّت يدك أو حط الجوال على سطح مستوي وصوّر من مسافة قريبة بدون حركة.'}
+                                {errorType === 'mismatch' && 'تأكد إنك تصوّر نفس الجهاز بالضبط من ٣ زوايا: الأمام، الخلف، والجنب.'}
+                                {!['front_view','back_view','side_view','incomplete_body','lighting','blur','mismatch'].includes(errorType) && 'حاول تصوّر الجهاز في إضاءة جيدة ومن زوايا واضحة وتظهر الجهاز كامل.'}
+                            </p>
+                        </div>
+
+                        {/* Partial reshoot button (when a specific photo failed) */}
+                        {failedIdx >= 0 && failedIdx <= 2 && errorType !== 'mismatch' && onPartialRetry && (
+                            <button
+                                onClick={onPartialRetry}
+                                className="w-full py-3.5 rounded-2xl bg-gradient-to-l from-sawm-purple-600 to-sawm-purple-500 text-white font-bold text-sm btn-shadow hover:brightness-110 active:scale-[0.98] transition-all flex items-center justify-center gap-2 mb-2"
+                            >
+                                <CameraIcon size={18} color="white" />
+                                <span>إعادة تصوير هذه الصورة فقط</span>
+                            </button>
+                        )}
+
+                        {/* Full retry button */}
+                        <button
+                            onClick={onRetry}
+                            className={`w-full py-3.5 rounded-2xl text-sm font-bold transition-all flex items-center justify-center gap-2 ${
+                                failedIdx >= 0 && failedIdx <= 2 && errorType !== 'mismatch' && onPartialRetry
+                                    ? 'bg-gray-100 text-gray-600 hover:bg-gray-200 active:scale-[0.98]'
+                                    : 'bg-gradient-to-l from-sawm-purple-600 to-sawm-purple-500 text-white btn-shadow hover:brightness-110 active:scale-[0.98]'
+                            }`}
+                        >
+                            <CameraIcon size={18} color={failedIdx >= 0 && failedIdx <= 2 && errorType !== 'mismatch' && onPartialRetry ? '#4b5563' : 'white'} />
+                            <span>إعادة تصوير الكل</span>
+                        </button>
+                    </div>
+                </div>
+            );
+        };
+
+        /* ───────────── API KEY MODAL ───────────── */
+        const ApiKeyModal = ({ onSave, onClose }) => {
+            const [key, setKey] = useState(localStorage.getItem('gemini_api_key') || '');
+            return (
+                <div className="absolute inset-0 z-50 flex items-center justify-center sheet-overlay" style={{ background: 'rgba(0,0,0,0.5)' }} onClick={onClose}>
+                    <div className="bg-white rounded-3xl p-6 mx-6 w-full max-w-sm animate-scaleIn" onClick={e => e.stopPropagation()}>
+                        <div className="flex items-center gap-2 mb-4">
+                            <AIChipIcon size={24} />
+                            <h3 className="text-lg font-bold text-gray-900">مفتاح Gemini API</h3>
+                        </div>
+                        <p className="text-xs text-gray-400 mb-4 leading-relaxed">أدخل مفتاح Google Gemini API عشان سَوم يحلّل الصور. المفتاح يتحفظ محلياً في جهازك فقط.</p>
+                        <input
+                            type="password"
+                            value={key}
+                            onChange={e => setKey(e.target.value)}
+                            placeholder="AIza..."
+                            className="w-full px-4 py-3 rounded-xl border-2 border-gray-200 text-sm text-left dir-ltr focus:border-sawm-purple-400 focus:outline-none transition-colors mb-4"
+                            style={{ direction: 'ltr' }}
+                        />
+                        <div className="flex gap-2">
+                            <button onClick={onClose} className="flex-1 py-3 rounded-xl bg-gray-100 text-gray-500 font-medium text-sm hover:bg-gray-200 transition-all">
+                                إلغاء
+                            </button>
+                            <button
+                                onClick={() => { localStorage.setItem('gemini_api_key', key); onSave(key); }}
+                                disabled={!key.trim()}
+                                className="flex-1 py-3 rounded-xl bg-gradient-to-l from-sawm-purple-600 to-sawm-purple-500 text-white font-bold text-sm btn-shadow hover:brightness-110 active:scale-[0.98] transition-all disabled:opacity-40"
+                            >
+                                حفظ
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            );
+        };
+
+        /* ───────────── ERROR TOAST ───────────── */
+        const ErrorToast = ({ message, onClose }) => (
+            <div className="absolute top-16 left-4 right-4 z-50 animate-slideUp">
+                <div className="bg-red-50 border border-red-200 rounded-2xl p-4 flex items-start gap-3">
+                    <span className="text-lg">⚠️</span>
+                    <div className="flex-1">
+                        <p className="text-sm font-bold text-red-700 mb-0.5">حصل خطأ</p>
+                        <p className="text-xs text-red-500 leading-relaxed">{message}</p>
+                    </div>
+                    <button onClick={onClose} className="text-red-300 hover:text-red-500 mt-0.5">
+                        <CloseIcon size={16} color="currentColor" />
+                    </button>
+                </div>
+            </div>
+        );
+
+        /* ───────────── A2HS INSTALL BANNER ───────────── */
+        const InstallBanner = ({ onInstall, onClose }) => (
+            <div className="absolute bottom-20 left-4 right-4 z-50 animate-slideUp">
+                <div className="bg-white rounded-3xl p-4 flex items-center gap-3" style={{ boxShadow: '0 12px 40px -8px rgba(139,92,246,0.3), 0 0 0 1px rgba(139,92,246,0.08)' }}>
+                    <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-sawm-purple-500 to-sawm-purple-700 flex items-center justify-center flex-shrink-0">
+                        <SparkleIcon size={20} color="white" />
+                    </div>
+                    <div className="flex-1 min-w-0">
+                        <p className="text-sm font-bold text-gray-900">أضف سوم لشاشتك الرئيسية</p>
+                        <p className="text-[10px] text-gray-400">وصول أسرع بدون متصفح — مثل التطبيق بالضبط!</p>
+                    </div>
+                    <div className="flex flex-col gap-1.5 flex-shrink-0">
+                        <button onClick={onInstall} className="px-4 py-1.5 rounded-xl bg-gradient-to-l from-sawm-purple-600 to-sawm-purple-500 text-white font-bold text-[11px] btn-shadow hover:brightness-110 active:scale-95 transition-all">
+                            تثبيت
+                        </button>
+                        <button onClick={onClose} className="px-4 py-1 rounded-xl text-gray-400 font-medium text-[10px] hover:text-gray-600 transition-colors">
+                            لاحقاً
+                        </button>
+                    </div>
+                </div>
+            </div>
+        );
+
+        /* ───────────── SETTINGS ICON ───────────── */
+        const SettingsIcon = ({ size = 18, color = "#6b7280" }) => (
+            <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+                <circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/>
+            </svg>
+        );
+
+        /* ───────────── MAIN APP ───────────── */
+        const App = () => {
+            const [step, setStep] = useState(0); // 0=capture, 1=analyzing, 2=result
+            const [progress, setProgress] = useState(0);
+            const [currentTask, setCurrentTask] = useState(0);
+            const [published, setPublished] = useState(false);
+            const [imagePreview, setImagePreview] = useState(null);
+            const [allPhotos, setAllPhotos] = useState([]);
+            const [aiResult, setAiResult] = useState(null);
+            const [apiKey, setApiKey] = useState(localStorage.getItem('gemini_api_key') || GEMINI_KEY);
+            const [showApiKeyModal, setShowApiKeyModal] = useState(false);
+            const [error, setError] = useState(null);
+            const [showConfidence, setShowConfidence] = useState(false);
+            const [pendingResult, setPendingResult] = useState(null);
+            const [validationError, setValidationError] = useState(null); // {errorMessage, errorType}
+            const [isValidating, setIsValidating] = useState(false);
+            const [photoValidation, setPhotoValidation] = useState(null); // {statuses: ['valid','valid','error'], failedIndex, errorMessage, errorType}
+            const [deferredPrompt, setDeferredPrompt] = useState(null);
+            const [showInstallBanner, setShowInstallBanner] = useState(false);
+            const progressRef = useRef(null);
+
+            // Listen for PWA install prompt
+            useEffect(() => {
+                const dismissed = localStorage.getItem('sawm_a2hs_dismissed');
+                if (dismissed) return;
+
+                const handler = (e) => {
+                    e.preventDefault();
+                    setDeferredPrompt(e);
+                    // Show banner after 3 seconds
+                    setTimeout(() => setShowInstallBanner(true), 3000);
+                };
+                window.addEventListener('beforeinstallprompt', handler);
+
+                // iOS Safari — show custom banner
+                const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
+                const isStandalone = window.matchMedia('(display-mode: standalone)').matches || navigator.standalone;
+                if (isIOS && !isStandalone && !dismissed) {
+                    setTimeout(() => setShowInstallBanner(true), 3000);
+                }
+
+                return () => window.removeEventListener('beforeinstallprompt', handler);
+            }, []);
+
+            const handleInstall = useCallback(async () => {
+                if (deferredPrompt) {
+                    deferredPrompt.prompt();
+                    const { outcome } = await deferredPrompt.userChoice;
+                    if (outcome === 'accepted') {
+                        setShowInstallBanner(false);
+                    }
+                    setDeferredPrompt(null);
+                } else {
+                    // iOS — show instructions
+                    alert('اضغط على زر المشاركة (⬆️) في الأسفل، ثم اختر "إضافة إلى الشاشة الرئيسية"');
+                }
+            }, [deferredPrompt]);
+
+            const handleDismissInstall = useCallback(() => {
+                setShowInstallBanner(false);
+                localStorage.setItem('sawm_a2hs_dismissed', Date.now().toString());
+            }, []);
+
+            const startProgressAnimation = useCallback(() => {
+                let p = 0;
+                progressRef.current = setInterval(() => {
+                    p += Math.random() * 2 + 0.5;
+                    if (p >= 90) p = 90; // Cap at 90%, wait for real completion
+                    setProgress(p);
+                    if (p < 25) setCurrentTask(0);
+                    else if (p < 50) setCurrentTask(1);
+                    else if (p < 75) setCurrentTask(2);
+                    else setCurrentTask(3);
+                }, 150);
+            }, []);
+
+            const finishProgress = useCallback(() => {
+                if (progressRef.current) clearInterval(progressRef.current);
+                setProgress(100);
+                setCurrentTask(4);
+            }, []);
+
+            const handleCapture = useCallback(async (photosArray) => {
+                // photosArray = [base64_1, base64_2, base64_3]
+                setImagePreview(photosArray[0]);
+                setAllPhotos(photosArray);
+                setError(null);
+                setValidationError(null);
+                setPhotoValidation(null);
+
+                const key = apiKey || localStorage.getItem('gemini_api_key');
+                if (!key) {
+                    setShowApiKeyModal(true);
+                    return;
+                }
+
+                const rawImages = photosArray.map(img => img.split(',')[1]);
+
+                // ─── STEP 1: Validation Pass ───
+                setStep(1);
+                setIsValidating(true);
+                setProgress(0);
+                setCurrentTask(0);
+
+                // Validation progress animation (faster, 4 tasks)
+                let vp = 0;
+                progressRef.current = setInterval(() => {
+                    vp += Math.random() * 4 + 1;
+                    if (vp >= 90) vp = 90;
+                    setProgress(vp);
+                    if (vp < 25) setCurrentTask(0);
+                    else if (vp < 50) setCurrentTask(1);
+                    else if (vp < 75) setCurrentTask(2);
+                    else setCurrentTask(3);
+                }, 150);
+
+                try {
+                    const validation = await validateImages(rawImages, key);
+
+                    if (progressRef.current) clearInterval(progressRef.current);
+                    setProgress(100);
+                    setCurrentTask(3);
+
+                    if (!validation.isValid) {
+                        // Build per-photo validation statuses
+                        const failedPhoto = validation.failedPhoto || 0;
+                        const failedIdx = failedPhoto - 1; // Convert 1-based to 0-based
+                        const errorType = validation.errorType || 'none';
+
+                        let statuses;
+                        if (failedIdx >= 0 && failedIdx <= 2) {
+                            // Specific photo failed — mark it as error, others as valid
+                            statuses = ['valid', 'valid', 'valid'];
+                            statuses[failedIdx] = 'error';
+                        } else if (errorType === 'mismatch') {
+                            // Mismatch means all photos are suspect — require full retake
+                            statuses = ['error', 'error', 'error'];
+                        } else {
+                            // General error, mark all as error
+                            statuses = ['error', 'error', 'error'];
+                        }
+
+                        const pv = {
+                            statuses,
+                            failedIndex: failedIdx,
+                            errorMessage: validation.errorMessage || 'فيه مشكلة بالصور، حاول مرة ثانية',
+                            errorType,
+                        };
+
+                        setTimeout(() => {
+                            setIsValidating(false);
+                            setStep(0);
+                            // Keep photos! Don't clear allPhotos.
+                            setPhotoValidation(pv);
+                            setValidationError({
+                                errorMessage: pv.errorMessage,
+                                errorType: pv.errorType,
+                                failedPhoto: failedPhoto,
+                            });
+                        }, 500);
+                        return;
+                    }
+
+                    // ─── STEP 2: Analysis Pass (validation passed) ───
+                    setIsValidating(false);
+                    setPhotoValidation(null);
+                    setProgress(0);
+                    setCurrentTask(0);
+                    startProgressAnimation();
+
+                    const result = await analyzeProductImage(rawImages, key);
+                    finishProgress();
+
+                    // Check confidence score
+                    if (result.confidence_score && result.confidence_score < 70) {
+                        setPendingResult(result);
+                        setShowConfidence(true);
+                        setTimeout(() => setStep(0), 300);
+                    } else {
+                        setAiResult(result);
+                        setTimeout(() => setStep(2), 600);
+                    }
+                } catch (err) {
+                    if (progressRef.current) clearInterval(progressRef.current);
+                    setIsValidating(false);
+                    console.error('Gemini Error:', err);
+                    setError(err.message || 'حصل خطأ في تحليل الصورة. تأكد من مفتاح الـ API.');
+                    setStep(0);
+                }
+            }, [apiKey, startProgressAnimation, finishProgress]);
+
+            const handleApiKeySave = useCallback((key) => {
+                setApiKey(key);
+                setShowApiKeyModal(false);
+                // If we have pending photos, retry
+                if (allPhotos.length === 3) {
+                    handleCapture(allPhotos);
+                }
+            }, [allPhotos]);
+
+            const handleConfidenceConfirm = useCallback(() => {
+                setShowConfidence(false);
+                setAiResult(pendingResult);
+                setPendingResult(null);
+                setStep(2);
+            }, [pendingResult]);
+
+            const handleConfidenceRetry = useCallback(() => {
+                setShowConfidence(false);
+                setPendingResult(null);
+                setPhotoValidation(null);
+                setAllPhotos([]);
+                setStep(0);
+            }, []);
+
+            const handleValidationRetry = useCallback(() => {
+                // Don't clear photos — keep valid ones for partial reshoot
+                // Only clear validation error modal (inline validation stays via photoValidation)
+                setValidationError(null);
+                setStep(0);
+            }, []);
+
+            const handleFullRetry = useCallback(() => {
+                // Full retry — clear everything
+                setValidationError(null);
+                setPhotoValidation(null);
+                setAllPhotos([]);
+                setStep(0);
+            }, []);
+
+            const handlePublish = useCallback(() => {
+                setPublished(true);
+            }, []);
+
+            return (
+                <div className="relative w-full max-w-[390px] mx-auto bg-white rounded-[3rem] overflow-hidden"
+                     style={{ height: '844px', boxShadow: '0 25px 80px -12px rgba(0,0,0,0.15), 0 0 0 1px rgba(0,0,0,0.05)' }}>
+                    {/* Phone frame */}
+                    <div className="absolute inset-0 pointer-events-none border border-gray-200/50 rounded-[3rem] z-50"></div>
+
+                    {/* Dynamic Island */}
+                    <div className="relative z-40">
+                        <div className="notch"></div>
+                    </div>
+
+                    {/* Error toast */}
+                    {error && <ErrorToast message={error} onClose={() => setError(null)} />}
+
+                    {/* Validation Error Modal */}
+                    {validationError && (
+                        <ValidationErrorModal
+                            errorMessage={validationError.errorMessage}
+                            errorType={validationError.errorType}
+                            failedPhoto={validationError.failedPhoto}
+                            photos={allPhotos}
+                            onRetry={handleFullRetry}
+                            onPartialRetry={handleValidationRetry}
+                        />
+                    )}
+
+                    {/* Confidence Confirmation Modal */}
+                    {showConfidence && pendingResult && (
+                        <ConfidenceModal aiResult={pendingResult} onConfirm={handleConfidenceConfirm} onRetry={handleConfidenceRetry} />
+                    )}
+
+                    {/* API Key Modal */}
+                    {showApiKeyModal && (
+                        <ApiKeyModal onSave={handleApiKeySave} onClose={() => setShowApiKeyModal(false)} />
+                    )}
+
+                    {/* Content wrapper */}
+                    <div className="flex flex-col h-full pt-2 pb-8 relative">
+                        <FloatingSparkles />
+
+                        {/* Top bar */}
+                        <div className="flex items-center justify-between px-6 py-3 flex-shrink-0">
+                            <div className="flex items-center gap-2">
+                                <div className="w-8 h-8 rounded-xl bg-gradient-to-br from-sawm-purple-500 to-sawm-purple-700 flex items-center justify-center">
+                                    <SparkleIcon size={14} color="white" />
+                                </div>
+                                <div>
+                                    <h1 className="text-sm font-bold text-gray-900 leading-none">سَوم</h1>
+                                    <span className="text-[9px] text-sawm-purple-500 font-medium">AI</span>
+                                </div>
+                            </div>
+                            <div className="flex items-center gap-2">
+                                <button onClick={() => setShowApiKeyModal(true)} className="w-8 h-8 rounded-full bg-gray-50 flex items-center justify-center hover:bg-gray-100 transition-colors" title="إعدادات API">
+                                    <SettingsIcon size={15} color={apiKey ? '#10b981' : '#9ca3af'} />
+                                </button>
+                                <div className="flex items-center gap-1.5 bg-gray-50 rounded-full px-3 py-1.5">
+                                    <div className={`w-1.5 h-1.5 rounded-full ${apiKey ? 'bg-sawm-emerald-500 animate-pulse' : 'bg-gray-300'}`}></div>
+                                    <span className="text-[10px] text-gray-500 font-medium">إعلان سريع</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        {/* Steps indicator */}
+                        <div className="flex items-center justify-center gap-2 px-6 mb-4 flex-shrink-0">
+                            {['التصوير', 'التحليل', 'النشر'].map((label, i) => (
+                                <div key={i} className="flex items-center gap-2">
+                                    <div className={`flex items-center gap-1.5 transition-all duration-300`}>
+                                        <div className={`w-6 h-6 rounded-full flex items-center justify-center text-[10px] font-bold transition-all duration-300 ${
+                                            step > i ? 'bg-sawm-emerald-500 text-white' :
+                                            step === i ? 'bg-sawm-purple-500 text-white' :
+                                            'bg-gray-100 text-gray-400'
+                                        }`}>
+                                            {step > i ? <CheckIcon size={12} /> : i + 1}
+                                        </div>
+                                        <span className={`text-[10px] font-medium transition-all duration-300 ${
+                                            step === i ? 'text-sawm-purple-600' :
+                                            step > i ? 'text-sawm-emerald-600' :
+                                            'text-gray-400'
+                                        }`}>{label}</span>
+                                    </div>
+                                    {i < 2 && (
+                                        <div className={`w-8 h-0.5 rounded-full transition-all duration-300 ${
+                                            step > i ? 'bg-sawm-emerald-300' : 'bg-gray-100'
+                                        }`}></div>
+                                    )}
+                                </div>
+                            ))}
+                        </div>
+
+                        {/* Main content area */}
+                        {step === 0 && <CaptureStep onCapture={handleCapture} initialPhotos={allPhotos.length === 3 ? allPhotos : null} photoValidation={photoValidation} />}
+                        {step === 1 && <AnalysisStep progress={Math.min(progress, 100)} currentTask={currentTask} imagePreview={imagePreview} allPhotos={allPhotos} isValidating={isValidating} />}
+                        {step === 2 && <ResultStep onPublish={handlePublish} published={published} aiResult={aiResult} imagePreview={imagePreview} allPhotos={allPhotos} />}
+
+                        {/* Home indicator */}
+                        <div className="flex-shrink-0 flex justify-center pt-2">
+                            <div className="w-32 h-1 bg-gray-900 rounded-full opacity-20"></div>
+                        </div>
+                    </div>
+
+                    {/* A2HS Install Banner */}
+                    {showInstallBanner && (
+                        <InstallBanner onInstall={handleInstall} onClose={handleDismissInstall} />
+                    )}
+                </div>
+            );
+        };
+
+        ReactDOM.createRoot(document.getElementById('root')).render(<App />);
+    </script>
+
+    <!-- Service Worker Registration -->
+    <script>
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('/sw.js')
+                    .then((reg) => {
+                        console.log('سَوم SW registered:', reg.scope);
+                        // Auto-update check
+                        reg.addEventListener('updatefound', () => {
+                            const newWorker = reg.installing;
+                            newWorker.addEventListener('statechange', () => {
+                                if (newWorker.state === 'activated') {
+                                    console.log('سَوم SW updated!');
+                                }
+                            });
+                        });
+                    })
+                    .catch((err) => console.log('SW registration failed:', err));
+            });
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,17 @@
+{
+  "permissions": {
+    "allow": [
+      "mcp__Claude_Preview__preview_start",
+      "Bash(curl -s https://generativelanguage.googleapis.com/v1beta/models?key=AIzaSyCJ7NJ5oabtHdqJSA3FhIcqIxzfMBfIE0Y)",
+      "Bash(python3 -c \"import sys,json; data=json.load\\(sys.stdin\\); [print\\(m[''''name'''']\\) for m in data.get\\(''''models'''',[]\\) if ''''flash'''' in m[''''name''''].lower\\(\\) and ''''generateContent'''' in m.get\\(''''supportedGenerationMethods'''',[]\\)]\")",
+      "Read(//c//**)",
+      "Bash(cmd //c 'rename \"\"سوم AI\"\" sawmAI')",
+      "Bash(taskkill //F //IM python.exe)",
+      "Bash(taskkill //F //IM python3.exe)",
+      "Bash(fuser 'C:/سوم AI')",
+      "Bash(powershell -Command \"Get-Process | Where-Object { $_ath -like ''''*سوم*'''' -or $_ath -like ''''*sawm*'''' }\")",
+      "Bash(ls -d */)",
+      "Bash(cp -r \"C:/سوم AI\" \"C:/sawmAI\")"
+    ]
+  }
+}
