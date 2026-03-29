@@ -544,6 +544,7 @@
                 const reader = new FileReader();
                 reader.onload = (ev) => {
                     const base64 = ev.target.result;
+                    userChangedPhotos.current = true; // User actively added/changed a photo
                     setPhotos(prev => {
                         const updated = [...prev];
                         if (reshootIndex !== null) {
@@ -567,6 +568,9 @@
                 setShowPicker(true);
             };
 
+            // Track if photos were changed by user (not just loaded from initialPhotos)
+            const userChangedPhotos = useRef(false);
+
             // Auto-submit when 3 photos are done (and either no validation or after reshoot)
             useEffect(() => {
                 if (photos.every(Boolean)) {
@@ -579,6 +583,10 @@
                             return () => clearTimeout(timer);
                         }
                         return; // Don't auto-submit if failed photo hasn't been replaced yet
+                    }
+                    // Don't auto-submit if photos came pre-filled from initialPhotos (prevents loop)
+                    if (!userChangedPhotos.current && initialPhotos && initialPhotos.every(Boolean)) {
+                        return;
                     }
                     const timer = setTimeout(() => onCapture(photos), 600);
                     return () => clearTimeout(timer);
